@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="horizontal"
+        android:padding="@dimen/normal_space" >
+
+        <TextView
+            android:id="@+id/pop_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="星星充电"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:textSize="@dimen/text_size_pop_name"/>
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:paddingLeft="5dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginLeft="5dp"
+                android:src="@mipmap/icon_famous_brand_price" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="5dp" >
+
+                <TextView
+                    android:id="@+id/pop_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2.5/km.h"
+                    android:textColor="#0a0ab5"
+                    android:textSize="@dimen/text_size_pop_price" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+
+</LinearLayout>

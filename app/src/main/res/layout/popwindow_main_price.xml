@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="horizontal"
+        android:padding="@dimen/normal_space" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="6dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="3dp" >
+
+            <TextView
+                android:id="@+id/pop_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="广东省广州市越秀区先烈南路74号"
+                android:textColor="#42ff4081"
+                android:textSize="@dimen/text_size_pop_address" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:src="@mipmap/hui_discount_item_rule_arrow" />
+    </LinearLayout>
+
+
+
+</LinearLayout>
