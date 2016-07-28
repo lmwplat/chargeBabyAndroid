@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:padding="@dimen/normal_space"
-            android:text="登陆"
+            android:text="@string/title_activity_login"
             android:textColor="#000"
             android:textSize="@dimen/title_text_size" />
 
@@ -68,11 +68,13 @@
                     android:orientation="horizontal"
                     android:padding="15dp" >
 
-                    <TextView
+                    <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="用户名"
-                        android:textSize="@dimen/text_size_default" />
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:src="@mipmap/user_icon_copy" />
 
                     <View
                         android:layout_width="1px"
@@ -87,7 +89,8 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:hint="请输入用户名"
+                        android:hint="@string/login_tip_user"
+                        android:singleLine="true"
                         android:textSize="@dimen/text_size_default" />
                 </LinearLayout>
 
@@ -104,12 +107,13 @@
                     android:orientation="horizontal"
                     android:padding="15dp" >
 
-                    <TextView
+                    <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="密 码"
-                        android:textSize="@dimen/text_size_default"
-                        android:layout_weight="0.04" />
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:src="@mipmap/lock_icon_copy" />
 
                     <View
                         android:layout_width="1px"
@@ -124,7 +128,8 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:hint="请输入密码"
+                        android:singleLine="true"
+                        android:hint="@string/login_tip_pwd"
                         android:textSize="@dimen/text_size_default" />
                 </LinearLayout>
             </LinearLayout>
@@ -141,7 +146,7 @@
                 android:layout_marginRight="15dp"
                 android:background="@drawable/btn_login_selector"
                 android:enabled="false"
-                android:text="登录"
+                android:text="@string/login_btn_text"
                 android:textColor="@color/white" />
 
             <TextView

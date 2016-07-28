@@ -18,6 +18,7 @@ import org.xutils.x;
  */
 @ContentView(R.layout.activity_about_us)
 public class AboutUsActivity extends AppCompatActivity {
+    private static final String TAG = "AboutUsActivity";
 
     @ViewInject(R.id.about_us_back)
     ImageView img_about_us_back;

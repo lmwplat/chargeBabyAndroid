@@ -19,6 +19,7 @@ import org.xutils.x;
  */
 @ContentView(R.layout.activity_feed_back)
 public class FeedBackActivity extends AppCompatActivity {
+    private static final String TAG = "FeedBackActivity";
 
     @ViewInject(R.id.feedback_back)
     ImageView img_feedback_back;

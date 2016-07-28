@@ -51,6 +51,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 @ContentView(R.layout.activity_login)
 public class LoginActivity extends Activity {
+    private static final String TAG = "LoginActivity";
 
     @ViewInject(R.id.login_back)
     ImageView img_back;

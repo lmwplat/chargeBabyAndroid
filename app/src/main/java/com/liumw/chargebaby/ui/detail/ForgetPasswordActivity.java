@@ -17,6 +17,7 @@ import org.xutils.x;
  */
 @ContentView(R.layout.activity_forget_password)
 public class ForgetPasswordActivity extends AppCompatActivity {
+    private static final String TAG = "ForgetPasswordActivity";
 
     @ViewInject(R.id.forget_password_back)
     ImageView img_forget_password_back;

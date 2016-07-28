@@ -20,6 +20,7 @@ import org.xutils.x;
  */
 @ContentView(R.layout.activity_setting)
 public class SettingActivity extends AppCompatActivity {
+    private static final String TAG = "SettingActivity";
 
     @ViewInject(R.id.setting_back)
     ImageView img_setting_back;
