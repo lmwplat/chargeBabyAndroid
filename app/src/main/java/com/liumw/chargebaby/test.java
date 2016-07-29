@@ -5,4 +5,7 @@ package com.liumw.chargebaby;
  * Email:   1879358765@qq.com
  */
 public class test {
+    /**
+     *
+     */
 }
