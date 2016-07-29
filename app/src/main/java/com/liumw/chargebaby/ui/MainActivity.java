@@ -69,10 +69,10 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
             user = gson.fromJson(str, User.class);
 
 
-            //若值为true,用户无需输入密码，直接跳转进入操作界面
+           /* //若值为true,用户无需输入密码，直接跳转进入操作界面
             Intent intent = new Intent(this,
                     MainActivity.class);
-            startActivity(intent);
+            startActivity(intent);*/
         }
 
     }
