@@ -49,11 +49,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <com.baidu.mapapi.map.MapView
+        <!--<com.baidu.mapapi.map.MapView
             android:id="@+id/bmapview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="true" />
+            android:clickable="true" />-->
     </FrameLayout>
 
 </LinearLayout>

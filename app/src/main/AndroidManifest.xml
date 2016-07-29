@@ -26,6 +26,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 
     <application
         android:name=".utils.ChargeBabyApp"
@@ -35,8 +36,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="KvUx2UWnzfXraMmOOxt6VIMv4qwXXw0D" />
+            android:name="com.amap.api.v2.apikey"
+            android:value="8ec0d43b659c3a312c55fb4294a6f45c" />
 
         <activity
             android:name=".ui.MainActivity"
@@ -50,10 +51,15 @@
             </intent-filter>
         </activity>
 
-        <service
+        <!--<service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" />
+            android:process=":remote" />-->
+
+        <service android:name="com.amap.api.location.APSService"
+            android:enabled="true"
+            android:process=":remote"
+            />
 
         <activity
             android:name=".ui.detail.LoginActivity"
