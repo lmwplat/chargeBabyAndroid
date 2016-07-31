@@ -35,12 +35,19 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.liumw.chargebaby.R;
+import com.liumw.chargebaby.base.Application;
+import com.liumw.chargebaby.base.ChargeConstants;
+import com.liumw.chargebaby.db.DBManager;
 import com.liumw.chargebaby.entity.BDMapData;
+import com.liumw.chargebaby.entity.Charge;
 import com.liumw.chargebaby.ui.MainActivity;
 import com.liumw.chargebaby.ui.popwindow.SelectPicPopupWindow;
 import com.liumw.chargebaby.utils.ToastUtils;
 
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
 
@@ -61,13 +68,17 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
     private LocationClient mLocationClient = null;
     public BDLocationListener mBDListener = new MyLocationListener();
 
-    private List<BDMapData> bdMapClientList;
+    private List<BDMapData> bdMapClientList = new ArrayList<BDMapData>();
     private double latitude;//维度
     private double longitude;// 经度
     private boolean isFirstLocate = true;
 
+    private LatLng myLatLng;
     private Button mButtonAdd;
     private Button mButtonSub;
+
+    DbManager.DaoConfig daoConfig= DBManager.getDaoConfig();
+    DbManager db = x.getDb(daoConfig);
 
     //定位信息
     private float radius;// 定位精度半径，单位是米
@@ -95,7 +106,6 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
         } else {
             Log.i("FragmentA", "onActivityCreated:view is NOOOOOOOOOOOOOOOOT null");
         }
-
 
         init();
     }
@@ -172,8 +182,12 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
             MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(ll);
             mBaiduMap.animateMapStatus(msu);
 
-            initMapDataList();
-            addOverlay();
+           // initMapDataList();
+            try {
+                addOverlay();
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -182,11 +196,14 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
     /**
      * 添加覆盖物的方法
      */
-    private void addOverlay() {
+    private void addOverlay() throws DbException {
         Marker marker = null;
         LatLng point = null;
         MarkerOptions option = null;
-        BitmapDescriptor bitmap =BitmapDescriptorFactory.fromResource(R.mipmap.icon_marka);;
+        BitmapDescriptor bitmap =BitmapDescriptorFactory.fromResource(R.mipmap.icon_marka);
+        //获取附近的所有充电桩
+        getAllCharge();
+
         for (BDMapData data : bdMapClientList) {
             point = new LatLng(data.getLatitude(), data.getLongitude());
             option = new MarkerOptions().position(point).icon(bitmap);
@@ -201,6 +218,28 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
         MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(point);
         mBaiduMap.setMapStatus(status);
 
+    }
+
+    /**
+     * 获取附近的所有充电桩
+     */
+    private void getAllCharge() throws DbException {
+        myLatLng = new LatLng(latitude, longitude);
+        List<Charge> all = db.findAll(Charge.class);
+        for(Charge charge : all){
+            LatLng  chargeLat = new LatLng(charge.getLatitude(), charge.getLongitude());
+            Double distance = DistanceUtil.getDistance(myLatLng,chargeLat);
+            if (distance < ChargeConstants.DISTANCE){
+                BDMapData bDMapData = new BDMapData();
+                bDMapData.setName(charge.getName());
+                bDMapData.setAddress(charge.getAddress());
+                bDMapData.setDistance(distance);
+                bDMapData.setFeeStandard(charge.getFeeStandard());
+                bDMapData.setLatitude(charge.getLatitude());
+                bDMapData.setLongitude(charge.getLongitude());
+                bdMapClientList.add(bDMapData);
+            }
+        }
     }
 
     /**
@@ -256,6 +295,8 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
     public void onDestroy() {
         super.onDestroy();
         //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
+        // 取消监听 SDK 广播
+        mLocationClient.stop();   //添加这句就行了
         mMapView.onDestroy();
     }
     @Override

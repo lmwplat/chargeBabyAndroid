@@ -14,13 +14,17 @@ public class Application extends android.app.Application {
     public static final String ACTION_LOGIN = "userController/login";
     /**远程注册方法接口*/
     public static final String ACTION_REGIST = "userController/reg";
+    /**远程确认修改密码方法接口*/
+    public static final String ACTION_CONFIRM = "userController/confirm";
+    /**远程提交意见反馈*/
+    public static final String ACTION_FEEDBACK_CONFIRM = "feedbackController/feedbackConfirm";
 
     /**SharedPreferences 存储的文件名*/
     public static final String SP_FILE_NAME = "share_data";
     /**SharedPreferences 登录信息*/
     public static final String LONIN_INFO = "loginInfo";
 
-
+    /***/
 
     public static Context context;
 

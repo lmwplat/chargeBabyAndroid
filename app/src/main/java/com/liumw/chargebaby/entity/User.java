@@ -26,7 +26,7 @@ public class User {
     /**头像*/
     private String headUrl;
     /**是否锁定，默认不锁*/
-    private Boolean isLock = false;
+    private Boolean isLock;
 
     public Long getId() {
         return id;
@@ -106,5 +106,21 @@ public class User {
 
     public void setLock(Boolean lock) {
         isLock = lock;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", realName='" + realName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", headUrl='" + headUrl + '\'' +
+                ", isLock=" + isLock +
+                '}';
     }
 }

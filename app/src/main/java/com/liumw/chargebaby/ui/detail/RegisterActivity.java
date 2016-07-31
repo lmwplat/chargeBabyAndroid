@@ -16,12 +16,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.liumw.chargebaby.R;
 import com.liumw.chargebaby.base.Application;
+import com.liumw.chargebaby.base.ChargeConstants;
 import com.liumw.chargebaby.entity.User;
+import com.liumw.chargebaby.utils.LoginInfoUtils;
+import com.liumw.chargebaby.vo.Json;
 
 import org.xutils.common.Callback;
+import org.xutils.common.util.MD5;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -48,9 +53,9 @@ public class RegisterActivity extends Activity {
 
     private String username;
     private String password;
+    private String password2;
     private User user;
-
-    private SharedPreferences sp;
+    private Json json;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +63,11 @@ public class RegisterActivity extends Activity {
         x.view().inject(this);
         Log.e(TAG, "RegisterActivity.class :: onCreate()");
 
-        sp = getSharedPreferences(Application.SP_FILE_NAME, Context.MODE_PRIVATE);
-        et_usr.addTextChangedListener(new TextWatcher() {
+        et_pw2.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-                if (et_usr.getText().toString().length() >= 5) {
+                if (et_pw2.getText().toString().length() >= 6) {
                     bt_register.setEnabled(true);
                     Log.e(TAG, "register-set-true");
                 } else {
@@ -97,16 +101,14 @@ public class RegisterActivity extends Activity {
                 break;
             case R.id.bt_register:
                 Log.e(TAG, "点击了注册按钮");
+                username = et_usr.getText().toString().trim();
+                password = et_pw1.getText().toString().trim();
+                password2 = et_pw2.getText().toString().trim();
                 //验证两次密码是否一致
                 if (vilidate()) {
                     // TODO 信息校验通过，提交到服务器进行注册
-                    //UserDao userDao = new UserDao();
-                    register(username, password);
-                    Toast.makeText(RegisterActivity.this, username + "注册成功", Toast.LENGTH_LONG).show();
-
-                    // 跳转到登录页面
-                    startActivity(new Intent(this, LoginActivity.class));
-                    finish();
+                    String md5Pass = MD5.md5(password);
+                    register(username, md5Pass);
                 }
                 ;
                 break;
@@ -127,21 +129,36 @@ public class RegisterActivity extends Activity {
             @Override
             public void onSuccess(String result) {
                 Log.e(username, "onSuccess result<<" + result);
-                Gson gson = new Gson();//初始化
-                user = gson.fromJson(result, User.class);//result为请求后返回的JSON数据,可以直接使用XUtils获得,NewsData.class为一个bean.如以下数据：
-                //将登录信息，存入sharedPreference
-                sp.edit().putString(Application.LONIN_INFO, result).commit();
+                json = JSON.parseObject(result, Json.class);//result为请求后返回的JSON数据,可以直接使用XUtils获得,NewsData.class为一个bean.如以下数据：
+                if (!json.isSuccess()){
 
-                progressDialog.cancel();
+                    Log.e(TAG, "注册失败" + json.getMsg());
+                    Toast.makeText(RegisterActivity.this,  "注册失败" + json.getMsg(), Toast.LENGTH_LONG).show();
+                }else{
+                    //将登录信息，存入sharedPreference
+                    LoginInfoUtils.setLoginInfo(RegisterActivity.this, JSON.toJSONString(json.getObj()));
+
+                    Toast.makeText(RegisterActivity.this, username + "注册成功", Toast.LENGTH_LONG).show();
+                    progressDialog.cancel();
+                    // 跳转到登录页面
+                    Intent intent=new Intent();
+                    intent.putExtra("username", username);
+                    setResult(ChargeConstants.REGISTER_SUCCESS_RESULT_CODE, intent);
+
+                    finish();
+                }
+
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                Toast.makeText(RegisterActivity.this, username + "注册失败", Toast.LENGTH_LONG).show();
                 Log.e(TAG, "onError" );
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
+
                 Log.e(TAG, "onCancelled" );
             }
 
@@ -157,20 +174,23 @@ public class RegisterActivity extends Activity {
      * 验证用户数据的合法性
      */
     private Boolean vilidate() {
-        username = et_usr.getText().toString().trim();
-        password = et_pw1.getText().toString().trim();
-        String password2 = et_pw2.getText().toString().trim();
+
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password) || TextUtils.isEmpty(password2)) {
-            Toast.makeText(this, "注册信息填写不完整", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "信息填写不完整", Toast.LENGTH_SHORT).show();
             return false;
-        } else {
-            if (!password.equals(password2)) {
-                Toast.makeText(this, "两次密码输入不一致", Toast.LENGTH_SHORT).show();
-                return false;
-            } else {
-                return true;
-            }
         }
+
+        if (!password.equals(password2)) {
+            Toast.makeText(this, "两次密码输入不一致", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (password.length() < 6){
+            Toast.makeText(this, "密码长度不足6位", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
 }

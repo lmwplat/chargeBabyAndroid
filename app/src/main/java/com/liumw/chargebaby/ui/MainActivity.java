@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -16,6 +18,7 @@ import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
 import com.liumw.chargebaby.R;
 import com.liumw.chargebaby.base.Application;
+import com.liumw.chargebaby.db.DBManager;
 import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.ui.fragment.HomeFragment;
 import com.liumw.chargebaby.ui.fragment.MyFragment;
@@ -25,6 +28,8 @@ import org.xutils.x;
 
 public class MainActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener {
     private static final String TAG = "MainActivity";
+    /**是否登录*/
+    public static final Boolean IS_LOGIN = false;
     //底部tab
     @ViewInject(R.id.rg_main_bottom_tabs)
     private RadioGroup group;
@@ -44,7 +49,8 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
 
     User user = null;
 
-    private SharedPreferences sp;
+    public DBManager dbHelper;
+
 
 
     @Override
@@ -53,6 +59,12 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         x.view().inject(this);
+
+        //首次执行导入.db文件
+        dbHelper = new DBManager(this);
+        dbHelper.openDatabase();
+        dbHelper.closeDatabase();
+
         //初始化fragmentManager
         fragmentManager=getSupportFragmentManager();
         //设置默认选中
@@ -60,20 +72,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
         group.setOnCheckedChangeListener(this);
         //切换不同的fragment
         changeFragment(0);
-        //从共享参数获取数据
-        sp = getSharedPreferences(Application.SP_FILE_NAME, Context.MODE_PRIVATE);
-        String str = sp.getString(Application.LONIN_INFO, null);
-        Log.e(TAG, "从sp中获取" + str);
-        if (str != null ) {
-            Gson gson = new Gson();//初始化
-            user = gson.fromJson(str, User.class);
-
-
-           /* //若值为true,用户无需输入密码，直接跳转进入操作界面
-            Intent intent = new Intent(this,
-                    MainActivity.class);
-            startActivity(intent);*/
-        }
 
     }
 
