@@ -11,28 +11,41 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    aaptOptions {
+        additionalParameters "--no-version-vectors"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("chargebaby.jks")
+            storePassword "bjcharge"
+            keyAlias "chargebaby"
+            keyPassword "bjcharge"
+        }
+    }
+
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile files('libs/baidumapapi_base_v3_7_3.jar')
-    compile files('libs/baidumapapi_cloud_v3_7_3.jar')
-    compile files('libs/baidumapapi_map_v3_7_3.jar')
-    compile files('libs/baidumapapi_radar_v3_7_3.jar')
-    compile files('libs/baidumapapi_search_v3_7_3.jar')
-    compile files('libs/baidumapapi_util_v3_7_3.jar')
-    compile files('libs/locSDK_6.13.jar')
+    compile files('libs/gson-2.7.jar')
+    compile files('libs/AMap3DMap_3.3.3_AMapNavi_1.9.1_AMapSearch_3.3.0_AMapLocation_2.7.0_20160726.jar')
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'org.xutils:xutils:3.3.36'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:design:23.4.0'
-    compile files('libs/gson-2.7.jar')
-    compile files('libs/fastjson-1.1.48.android.jar')
+
 }
