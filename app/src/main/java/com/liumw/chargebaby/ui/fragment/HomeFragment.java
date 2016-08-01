@@ -17,24 +17,7 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.BDNotifyListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.SDKInitializer;
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.InfoWindow;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.OverlayOptions;
-import com.baidu.mapapi.model.LatLng;
+
 import com.liumw.chargebaby.R;
 import com.liumw.chargebaby.entity.BDMapData;
 import com.liumw.chargebaby.ui.MainActivity;
@@ -56,10 +39,9 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
     //自定义的弹出框类
     private SelectPicPopupWindow menuWindow;
 
-    private MapView mMapView;
-    private BaiduMap mBaiduMap;
-    private LocationClient mLocationClient = null;
-    public BDLocationListener mBDListener = new MyLocationListener();
+
+    /*private LocationClient mLocationClient = null;
+    public BDLocationListener mBDListener = new MyLocationListener();*/
 
     private List<BDMapData> bdMapClientList;
     private double latitude;//维度
@@ -105,15 +87,15 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
      */
     private void init() {
 
-        mMapView = (MapView) view.findViewById(R.id.bmapview);
+        /*mMapView = (MapView) view.findViewById(R.id.bmapview);
         mMapView.showZoomControls(false);//让百度地图默认的地图缩放控件不显示
 
         mBaiduMap = mMapView.getMap();
         mBaiduMap.setMyLocationEnabled(true);//使能百度地图的定位功能
         mLocationClient = new LocationClient(getActivity().getApplicationContext());
-        mLocationClient.registerLocationListener(mBDListener);//注册地图的监听器
-        initLocation();
-        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
+        mLocationClient.registerLocationListener(mBDListener);//注册地图的监听器*/
+        //initLocation();
+        /*mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 
@@ -134,7 +116,7 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
             }
         });
         //开始定位
-        mLocationClient.start();
+        mLocationClient.start();*/
 
     }
 
@@ -143,7 +125,7 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
     /**
      * 自定义一个百度地图的定位监听器，可监听定位类型，位置经纬度变化等一系列状态
      */
-    private class MyLocationListener implements BDLocationListener {
+    /*private class MyLocationListener implements BDLocationListener {
         // 异步返回的定位结果
         @Override
         public void onReceiveLocation(BDLocation location) {
@@ -160,7 +142,7 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
             city = location.getCity();// 城市
             district = location.getDistrict();// 区县
             // 构造定位数据
-            MyLocationData locData = new MyLocationData.Builder()
+            *//*MyLocationData locData = new MyLocationData.Builder()
                     .accuracy(radius)//
                     .direction(direction)// 方向
                     .latitude(latitude)//
@@ -170,20 +152,20 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
             mBaiduMap.setMyLocationData(locData);
             LatLng ll = new LatLng(latitude, longitude);
             MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(ll);
-            mBaiduMap.animateMapStatus(msu);
+            mBaiduMap.animateMapStatus(msu);*//*
 
             initMapDataList();
             addOverlay();
 
         }
 
-    }
+    }*/
 
     /**
      * 添加覆盖物的方法
      */
     private void addOverlay() {
-        Marker marker = null;
+        /*Marker marker = null;
         LatLng point = null;
         MarkerOptions option = null;
         BitmapDescriptor bitmap =BitmapDescriptorFactory.fromResource(R.mipmap.icon_marka);;
@@ -199,14 +181,14 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
         }
         //将地图移动到最后一个标志点
         MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(point);
-        mBaiduMap.setMapStatus(status);
+        mBaiduMap.setMapStatus(status);*/
 
     }
 
     /**
      * BaiduAPI上的例程，初始化定位
      */
-    private void initLocation() {
+    /*private void initLocation() {
 
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
@@ -223,7 +205,7 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
         option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
         option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
         mLocationClient.setLocOption(option);
-    }
+    }*/
 
     //初始化每个覆盖物对应的信息
     private void initMapDataList() {
@@ -256,19 +238,19 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
     public void onDestroy() {
         super.onDestroy();
         //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
-        mMapView.onDestroy();
+        //mMapView.onDestroy();
     }
     @Override
     public void onResume() {
         super.onResume();
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
-        mMapView.onResume();
+        //mMapView.onResume();
     }
     @Override
     public void onPause() {
         super.onPause();
         //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
-        mMapView.onPause();
+        //mMapView.onPause();
     }
 
     @Override

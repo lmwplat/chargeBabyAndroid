@@ -1,7 +1,6 @@
 package com.liumw.chargebaby.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -12,13 +11,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
 import com.liumw.chargebaby.R;
 import com.liumw.chargebaby.base.Application;
 import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.ui.fragment.HomeFragment;
 import com.liumw.chargebaby.ui.fragment.MyFragment;
+import com.liumw.chargebaby.ui.fragment.TestFragment;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -39,8 +38,9 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
 
     private FragmentManager fragmentManager;//管理fragment
     private HomeFragment home;
+    private TestFragment test;
     private MyFragment my;
-    private long exitTime=0;//两次按返回退出
+    private long exitTime = 0;//两次按返回退出
 
     User user = null;
 
@@ -50,11 +50,10 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         x.view().inject(this);
         //初始化fragmentManager
-        fragmentManager=getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         //设置默认选中
         mainHome.setChecked(true);
         group.setOnCheckedChangeListener(this);
@@ -64,7 +63,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
         sp = getSharedPreferences(Application.SP_FILE_NAME, Context.MODE_PRIVATE);
         String str = sp.getString(Application.LONIN_INFO, null);
         Log.e(TAG, "从sp中获取" + str);
-        if (str != null ) {
+        if (str != null) {
             Gson gson = new Gson();//初始化
             user = gson.fromJson(str, User.class);
 
@@ -98,11 +97,11 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
         }
     }
     //切换不同的fragment
+
     /**
      * 根据传入的index参数来设置选中的tab页。
      *
-     * @param index
-     *            每个tab页对应的下标。0表示home，1表示tuan，2表示search，3表示my。
+     * @param index 每个tab页对应的下标。0表示home，1表示tuan，2表示search，3表示my。
      */
     public void changeFragment(int index)//同时保存每个fragment
     {
@@ -110,18 +109,24 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
         hideFragments(beginTransaction);
         switch (index) {
             case 0:
-                if(home==null){
+                /*if(home==null){
                     home=new HomeFragment();
                     beginTransaction.add(R.id.main_content,	home);
                 }else{
                     beginTransaction.show(home);
+                }*/
+                if (test == null) {
+                    test = new TestFragment();
+                    beginTransaction.add(R.id.main_content, test);
+                } else {
+                    beginTransaction.show(test);
                 }
                 break;
             case 1:
-                if(my==null){
-                    my=new MyFragment();
-                    beginTransaction.add(R.id.main_content,	my);
-                }else{
+                if (my == null) {
+                    my = new MyFragment();
+                    beginTransaction.add(R.id.main_content, my);
+                } else {
                     beginTransaction.show(my);
                 }
                 break;
@@ -131,9 +136,10 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
         }
         beginTransaction.commit();//需要提交事务
     }
+
     private void hideFragments(FragmentTransaction transaction) {
-        if (home != null)
-            transaction.hide(home);
+        if (test != null)
+            transaction.hide(test);
         if (my != null)
             transaction.hide(my);
     }
@@ -153,6 +159,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
             //System.exit(0);
         }
     }
+
     @Override
     public void finish() {
         // TODO Auto-generated method stub
