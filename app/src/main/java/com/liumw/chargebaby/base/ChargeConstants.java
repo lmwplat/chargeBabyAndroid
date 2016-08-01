@@ -26,7 +26,7 @@ public class ChargeConstants {
 
     /**地图变量*/
     /**范围*/
-    public static Double DISTANCE = 10000000.0;
+    public static Double DISTANCE = 10000.0;
     /***********/
 }
 

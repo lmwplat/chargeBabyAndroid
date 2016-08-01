@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -27,6 +28,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -126,6 +128,12 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                Bundle bundle = marker.getExtraInfo();
+                String popName = bundle.getString("name");
+                String popFeeStandard = bundle.getString("feeStandard");
+                String popAddress = bundle.getString("address");
+                Double popDistance = bundle.getDouble("distance");
+
 
                 //实例化SelectPicPopupWindow
                 menuWindow = new SelectPicPopupWindow(getActivity(), null);
@@ -133,6 +141,12 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
                 menuWindow.showAtLocation(getActivity().findViewById(R.id.main_content), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
 
 
+                TextView tv_pop_name = (TextView) menuWindow.getContentView().findViewById(R.id.pop_name);
+                tv_pop_name.setText(popName);
+                TextView tv_price = (TextView) menuWindow.getContentView().findViewById(R.id.pop_price);
+                tv_price.setText(popFeeStandard);
+                TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.pop_address);
+                tv_address.setText(popAddress);
                 //得到点击的覆盖物的经纬度
                 LatLng ll = marker.getPosition();
 
@@ -160,8 +174,10 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
             if (location == null) {
                 return;
             }
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
+          //  longitude = location.getLongitude();
+          //  latitude = location.getLatitude();
+            longitude = 113.363604;
+            latitude = 23.139883;
             if (location.hasRadius()) {// 判断是否有定位精度半径
                 radius = location.getRadius();
             }
@@ -169,6 +185,7 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
             province = location.getProvince();// 省份
             city = location.getCity();// 城市
             district = location.getDistrict();// 区县
+
             // 构造定位数据
             MyLocationData locData = new MyLocationData.Builder()
                     .accuracy(radius)//
@@ -179,7 +196,11 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
             // 设置定位数据
             mBaiduMap.setMyLocationData(locData);
             LatLng ll = new LatLng(latitude, longitude);
-            MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(ll);
+            // 定义地图状态(精确到50米)
+            MapStatus mMapStatus = new MapStatus.Builder().target(ll).zoom(18).build();
+//            LatLng ll = new LatLng(23.139883, 113.363604);
+          //  MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(ll);
+            MapStatusUpdate msu = MapStatusUpdateFactory.newMapStatus(mMapStatus);
             mBaiduMap.animateMapStatus(msu);
 
            // initMapDataList();
@@ -210,8 +231,12 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
             marker = (Marker) mBaiduMap.addOverlay(option);
             //Bundle用于通信
             Bundle bundle = new Bundle();
-            bundle.putSerializable("", data.getName()
-                    +"纬度："+data.getLatitude()+   "经度："+data.getLongitude());
+            /*bundle.putSerializable("", data.getName()
+                    +"纬度："+data.getLatitude()+   "经度："+data.getLongitude());*/
+            bundle.putString("name", data.getName());
+            bundle.putString("feeStandard", data.getFeeStandard());
+            bundle.putString("address", data.getAddress());
+            bundle.putDouble("distance", data.getDistance());
             marker.setExtraInfo(bundle);//将bundle值传入marker中，给baiduMap设置监听时可以得到它
         }
         //将地图移动到最后一个标志点
@@ -227,9 +252,9 @@ public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChange
         myLatLng = new LatLng(latitude, longitude);
         List<Charge> all = db.findAll(Charge.class);
         for(Charge charge : all){
-            LatLng  chargeLat = new LatLng(charge.getLatitude(), charge.getLongitude());
-            Double distance = DistanceUtil.getDistance(myLatLng,chargeLat);
-            if (distance < ChargeConstants.DISTANCE){
+            if (charge.getLatitude() != null && charge.getLongitude() != null){
+                LatLng  chargeLat = new LatLng(charge.getLatitude(), charge.getLongitude());
+                Double distance = DistanceUtil.getDistance(myLatLng,chargeLat);
                 BDMapData bDMapData = new BDMapData();
                 bDMapData.setName(charge.getName());
                 bDMapData.setAddress(charge.getAddress());

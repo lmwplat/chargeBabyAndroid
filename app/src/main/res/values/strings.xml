@@ -5,7 +5,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
-
     <!-- Strings related to login -->
     <string name="prompt_email">用户名</string>
     <string name="prompt_password">密码 (optional)</string>
@@ -25,10 +24,16 @@
     <string name="register_tip_pwd1">请设置您密码</string>
     <string name="register_tip_pwd2">请重复上面密码</string>
     <string name="register_btn_text">注册</string>
+    <string name="confirm_btn_text">确认</string>
 
     <!--String for login -->
     <string name="title_activity_login">登录</string>
     <string name="login_tip_user">手机号/用户ID</string>
     <string name="login_tip_pwd">请输入登录密码</string>
     <string name="login_btn_text">登录</string>
+
+    <!--String for feedback-->
+    <string name="title_activity_feedback">意见反馈</string>
+    <string name="feedback_confirm">提交</string>
+    <string name="feedback_content">请输入您的宝贵意见</string>
 </resources>

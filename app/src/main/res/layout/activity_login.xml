@@ -84,6 +84,7 @@
                         android:background="@color/silverGray" />
 
                     <EditText
+                        android:id="@+id/et_login_username"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -123,6 +124,7 @@
                         android:background="@color/silverGray" />
 
                     <EditText
+                        android:id="@+id/et_login_password"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"

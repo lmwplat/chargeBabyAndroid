@@ -34,4 +34,5 @@ dependencies {
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile files('libs/gson-2.7.jar')
+    compile files('libs/fastjson-1.1.48.android.jar')
 }
