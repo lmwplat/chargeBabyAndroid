@@ -131,6 +131,31 @@
                     android:textSize="@dimen/text_size_default" />
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <LinearLayout
+                android:id="@+id/ll_setting_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:padding="@dimen/normal_space" >
+
+                <TextView
+                    android:id="@+id/tv_setting_logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:padding="@dimen/normal_space"
+                    android:textColor="@color/red"
+                    android:text="退出"
+                    android:textSize="@dimen/text_size_small" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </FrameLayout>

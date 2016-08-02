@@ -6,8 +6,10 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,246 +17,331 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.LocationSource;
+import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.GroundOverlayOptions;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.LatLngBounds;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.liumw.chargebaby.R;
+import com.liumw.chargebaby.db.DBManager;
 import com.liumw.chargebaby.entity.BDMapData;
+import com.liumw.chargebaby.entity.Charge;
 import com.liumw.chargebaby.ui.MainActivity;
 import com.liumw.chargebaby.ui.popwindow.SelectPicPopupWindow;
 import com.liumw.chargebaby.utils.ToastUtils;
 
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
 /**
  * 首页--附近默认
  */
-public class HomeFragment extends Fragment implements RadioGroup.OnCheckedChangeListener{
-    private View view;
+@ContentView(R.layout.fragment_home)
+public class HomeFragment extends Fragment implements LocationSource, AMapLocationListener, AMap.OnMarkerClickListener{
+    private static final String TAG = "HomeFragment";
+    private MapView mapView;
+
+    private AMap aMap;
+
+    private AMapLocationClientOption mLocationOption = null;
+
+    private AMapLocationClient mLocationClient;
+
+    private Double myLatitude;
+    private Double myLongitude;
+
+    private LocationSource.OnLocationChangedListener mListener;
+
+    private boolean isFirstLoc = true;
+
     //自定义的弹出框类
     private SelectPicPopupWindow menuWindow;
 
+    private List<BDMapData> bdMapClientList = new ArrayList<BDMapData>();
 
-    /*private LocationClient mLocationClient = null;
-    public BDLocationListener mBDListener = new MyLocationListener();*/
-
-    private List<BDMapData> bdMapClientList;
-    private double latitude;//维度
-    private double longitude;// 经度
-    private boolean isFirstLocate = true;
-
-    private Button mButtonAdd;
-    private Button mButtonSub;
-
-    //定位信息
-    private float radius;// 定位精度半径，单位是米
-    private String addrStr;// 反地理编码
-    private String province;// 省份信息
-    private String city;// 城市信息
-    private String district;// 区县信息
-    private float direction;// 手机方向信息
+    //数据库处理
+    DbManager.DaoConfig daoConfig= DBManager.getDaoConfig();
+    DbManager db = x.getDb(daoConfig);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        view=inflater.inflate(R.layout.fragment_home, null);
-
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        mapView = (MapView) view.findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init(getActivity());
+
+        aMap.setOnMarkerClickListener(this);
+    }
+
+    private void init(Context context) {
+        aMap = mapView.getMap();
+        aMap.setLocationSource(this);
+        aMap.setMyLocationEnabled(true);
+        aMap.getUiSettings().setMyLocationButtonEnabled(true);
+        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+        mLocationClient = new AMapLocationClient(context);
+        mLocationClient.setLocationListener(this);
+        mLocationOption = new AMapLocationClientOption();
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        mLocationClient.setLocationOption(mLocationOption);
+        mLocationClient.startLocation();
+
+    }
+
+    @Override
+    public void activate(LocationSource.OnLocationChangedListener onLocationChangedListener) {
+        mListener = onLocationChangedListener;
+        isFirstLoc = true;
+        int i = 0;
+    }
+
+    @Override
+    public void deactivate() {
+        mListener = null;
+        int i = 0;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        int i = 0;
+        Log.i("tag", aMapLocation.getErrorInfo());
+        Log.i("tag", aMapLocation.getErrorCode() + "");
+
+        if (aMapLocation != null) {
+            if (aMapLocation.getErrorCode() == 0) {
+                //定位成功回调信息，设置相关消息
+                aMapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见官方定位类型表
+                aMapLocation.getLatitude();//获取纬度
+                aMapLocation.getLongitude();//获取经度
+                aMapLocation.getAccuracy();//获取精度信息
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = new Date(aMapLocation.getTime());
+                df.format(date);//定位时间
+                aMapLocation.getAddress();//地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
+                aMapLocation.getCountry();//国家信息
+                aMapLocation.getProvince();//省信息
+                aMapLocation.getCity();//城市信息
+                aMapLocation.getDistrict();//城区信息
+                aMapLocation.getStreet();//街道信息
+                aMapLocation.getStreetNum();//街道门牌号信息
+                aMapLocation.getCityCode();//城市编码
+                aMapLocation.getAdCode();//地区编码
+
+                // 如果不设置标志位，此时再拖动地图时，它会不断将地图移动到当前的位置
+                if (isFirstLoc) {
+                    //设置缩放级别
+                    aMap.moveCamera(CameraUpdateFactory.zoomTo(18));
+                    //将地图移动到定位点
+                    aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude())));
+                    //点击定位按钮 能够将地图的中心移动到定位点
+                    mListener.onLocationChanged(aMapLocation);
+                    //添加图钉
+                    //aMap.addMarker(getMarkerOptions(amapLocation));
+                    //获取定位信息
+                    StringBuffer buffer = new StringBuffer();
+                    buffer.append(aMapLocation.getCountry() + ""
+                            + aMapLocation.getProvince() + ""
+                            + aMapLocation.getCity() + ""
+                            + aMapLocation.getProvince() + ""
+                            + aMapLocation.getDistrict() + ""
+                            + aMapLocation.getStreet() + ""
+                            + aMapLocation.getStreetNum());
+                    //Toast.makeText(getApplicationContext(), buffer.toString(), Toast.LENGTH_LONG).show();
+
+                    //aMap.addGroundOverlay(createGroundOverlayOptions(R.mipmap.ic_launcher, 39.936713, 116.386475));
+                    myLatitude = aMapLocation.getLatitude();
+                    myLongitude = aMapLocation.getLongitude();
+                    try {
+                        addOverlay();
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+
+                    isFirstLoc = false;
+                }
+
+
+            } else {
+                //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                Log.e("AmapError", "location Error, ErrCode:"
+                        + aMapLocation.getErrorCode() + ", errInfo:"
+                        + aMapLocation.getErrorInfo());
+                //Toast.makeText(getApplicationContext(), "定位失败", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private GroundOverlayOptions createGroundOverlayOptions(int imgRes, double x, double y) {
+        LatLngBounds bounds = new LatLngBounds.Builder()
+                .include(new LatLng(x - 0.002048, y - 0.002048))
+                .build();
+        GroundOverlayOptions options = new GroundOverlayOptions();
+        options.anchor(0.5f, 0.5f).transparency(0.1f);
+        options.image(BitmapDescriptorFactory.fromResource(imgRes)).positionFromBounds(bounds);
+        return  options;
+    }
+
+    /**
+     * 显示标记
+     * @param x         坐标
+     * @param y         坐标
+     * @param title     点击标记显示的标题
+     * @param snippet   副标题
+     * @param imgRes    要展示图片
+     * @return
+     */
+    private MarkerOptions createMarkOptions(double x, double y, String title, String snippet, int imgRes) {
+        MarkerOptions options = new MarkerOptions();
+        if(!TextUtils.isEmpty(title)) {
+            options.title(title);
+        }
+        if(!TextUtils.isEmpty(snippet)) {
+            options.snippet(snippet);
+        }
+        if(imgRes > 0) {
+            options.icon(BitmapDescriptorFactory.fromResource(imgRes));
+        }
+        options.position(new LatLng(x, y));
+        return options;
     }
 
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (view == null) {
-            Log.i("FragmentA", " onActivityCreated:view is null");
-        } else {
-            Log.i("FragmentA", "onActivityCreated:view is NOOOOOOOOOOOOOOOOT null");
-        }
+    public boolean onMarkerClick(Marker marker) {
+        marker.showInfoWindow();
+        Bundle bundle = (Bundle) marker.getObject();
+        String popName = bundle.getString("name");
+        String popFeeStandard = bundle.getString("feeStandard");
+        String popAddress = bundle.getString("address");
+        Double popDistance = bundle.getDouble("distance");
 
 
-        init();
+        Log.e(TAG, "点击了覆盖物");
+        //实例化SelectPicPopupWindow
+        menuWindow = new SelectPicPopupWindow(getActivity(), null);
+        //显示窗口
+        menuWindow.showAtLocation(getActivity().findViewById(R.id.main_content), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+
+
+        TextView tv_pop_name = (TextView) menuWindow.getContentView().findViewById(R.id.pop_name);
+        tv_pop_name.setText(popName);
+        TextView tv_price = (TextView) menuWindow.getContentView().findViewById(R.id.pop_price);
+        tv_price.setText(popFeeStandard);
+        TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.pop_address);
+        tv_address.setText(popAddress);
+        //得到点击的覆盖物的经纬度
+//        LatLng ll = marker.getPosition();
+
+        //让地图以备点击的覆盖物为中心
+        /*MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(ll);
+        mBaiduMap.setMapStatus(status);*/
+        return true;
     }
 
     /**
-     * 初始化方法
+     * 获取附近的所有充电桩
      */
-    private void init() {
-
-        /*mMapView = (MapView) view.findViewById(R.id.bmapview);
-        mMapView.showZoomControls(false);//让百度地图默认的地图缩放控件不显示
-
-        mBaiduMap = mMapView.getMap();
-        mBaiduMap.setMyLocationEnabled(true);//使能百度地图的定位功能
-        mLocationClient = new LocationClient(getActivity().getApplicationContext());
-        mLocationClient.registerLocationListener(mBDListener);//注册地图的监听器*/
-        //initLocation();
-        /*mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-
-                //实例化SelectPicPopupWindow
-                menuWindow = new SelectPicPopupWindow(getActivity(), null);
-                //显示窗口
-                menuWindow.showAtLocation(getActivity().findViewById(R.id.main_content), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
-
-
-                //得到点击的覆盖物的经纬度
-                LatLng ll = marker.getPosition();
-
-                //让地图以备点击的覆盖物为中心
-                MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(ll);
-                mBaiduMap.setMapStatus(status);
-                return true;
-
+    private void getAllCharge() throws DbException {
+        LatLng myLatLng = new LatLng(myLatitude, myLongitude);
+        List<Charge> all = db.findAll(Charge.class);
+        for(Charge charge : all){
+            if (charge.getLatitude() != null && charge.getLongitude() != null){
+                LatLng  chargeLat = new LatLng(charge.getLatitude(), charge.getLongitude());
+                Float distance = AMapUtils.calculateLineDistance(myLatLng, chargeLat);
+                BDMapData bDMapData = new BDMapData();
+                bDMapData.setName(charge.getName());
+                bDMapData.setAddress(charge.getAddress());
+                bDMapData.setDistance(distance);
+                bDMapData.setFeeStandard(charge.getFeeStandard());
+                bDMapData.setLatitude(charge.getLatitude());
+                bDMapData.setLongitude(charge.getLongitude());
+                bdMapClientList.add(bDMapData);
             }
-        });
-        //开始定位
-        mLocationClient.start();*/
-
-    }
-
-
-
-    /**
-     * 自定义一个百度地图的定位监听器，可监听定位类型，位置经纬度变化等一系列状态
-     */
-    /*private class MyLocationListener implements BDLocationListener {
-        // 异步返回的定位结果
-        @Override
-        public void onReceiveLocation(BDLocation location) {
-            if (location == null) {
-                return;
-            }
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-            if (location.hasRadius()) {// 判断是否有定位精度半径
-                radius = location.getRadius();
-            }
-            direction = location.getDirection();// 获取手机方向，【0~360°】,手机上面正面朝北为0°
-            province = location.getProvince();// 省份
-            city = location.getCity();// 城市
-            district = location.getDistrict();// 区县
-            // 构造定位数据
-            *//*MyLocationData locData = new MyLocationData.Builder()
-                    .accuracy(radius)//
-                    .direction(direction)// 方向
-                    .latitude(latitude)//
-                    .longitude(longitude)//
-                    .build();
-            // 设置定位数据
-            mBaiduMap.setMyLocationData(locData);
-            LatLng ll = new LatLng(latitude, longitude);
-            MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(ll);
-            mBaiduMap.animateMapStatus(msu);*//*
-
-            initMapDataList();
-            addOverlay();
-
         }
-
-    }*/
+    }
 
     /**
      * 添加覆盖物的方法
      */
-    private void addOverlay() {
-        /*Marker marker = null;
+    private void addOverlay() throws DbException {
+        Marker marker = null;
         LatLng point = null;
         MarkerOptions option = null;
-        BitmapDescriptor bitmap =BitmapDescriptorFactory.fromResource(R.mipmap.icon_marka);;
+        BitmapDescriptor bitmap =BitmapDescriptorFactory.fromResource(R.mipmap.icon_marka);
+        //Marker marker = aMap.addMarker(createMarkOptions(39.936713, 116.386475, "测试1", "测试1内容", R.mipmap.ic_launcher));
+        //获取附近的所有充电桩
+        getAllCharge();
+
         for (BDMapData data : bdMapClientList) {
             point = new LatLng(data.getLatitude(), data.getLongitude());
             option = new MarkerOptions().position(point).icon(bitmap);
-            marker = (Marker) mBaiduMap.addOverlay(option);
+            marker = aMap.addMarker(option);
             //Bundle用于通信
             Bundle bundle = new Bundle();
-            bundle.putSerializable("", data.getName()
-                    +"纬度："+data.getLatitude()+   "经度："+data.getLongitude());
-            marker.setExtraInfo(bundle);//将bundle值传入marker中，给baiduMap设置监听时可以得到它
+            bundle.putString("name", data.getName());
+            bundle.putString("feeStandard", data.getFeeStandard());
+            bundle.putString("address", data.getAddress());
+            bundle.putDouble("distance", data.getDistance());
+            marker.setObject(bundle);//将bundle值传入marker中，给baiduMap设置监听时可以得到它
         }
         //将地图移动到最后一个标志点
-        MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(point);
+        /*MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(point);
         mBaiduMap.setMapStatus(status);*/
-
-    }
-
-    /**
-     * BaiduAPI上的例程，初始化定位
-     */
-    /*private void initLocation() {
-
-        LocationClientOption option = new LocationClientOption();
-        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
-        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
-        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
-        int span = 0;
-        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
-        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
-        option.setOpenGps(true);//可选，默认false,设置是否使用gps
-        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
-        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
-        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
-        option.setIgnoreKillProcess(false);//可选，默认false，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认杀死
-        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
-        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
-        mLocationClient.setLocOption(option);
-    }*/
-
-    //初始化每个覆盖物对应的信息
-    private void initMapDataList() {
-        bdMapClientList = new ArrayList<>();
-        //让所有覆盖物的经纬度与你自己的经纬度相近，以便打开地图就能看到那些覆盖物
-        bdMapClientList.add(new BDMapData("中兴创维", latitude - 0.0656, longitude - 0.00354));
-        bdMapClientList.add(new BDMapData("领卓科技", latitude + 0.024, longitude - 0.0105));
-        bdMapClientList.add(new BDMapData("蓝翔驾校", latitude - 0.00052, longitude - 0.01086));
-        bdMapClientList.add(new BDMapData("优衣库折扣店", latitude + 0.0124, longitude + 0.00184));
-    }
-
-    /**
-     * 定位失败时显示的dialog的初始化方法
-     */
-    public void simpleDialog() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("当前网络不可用，请检查网络设置")
-                .setNeutralButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        AlertDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.show();
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
-        //mMapView.onDestroy();
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
-        //mMapView.onResume();
-    }
-    @Override
-    public void onPause() {
-        super.onPause();
-        //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
-        //mMapView.onPause();
-    }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
 
     }
 }

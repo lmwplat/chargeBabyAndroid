@@ -70,7 +70,7 @@
         <activity android:name=".ui.detail.ForgetPasswordActivity" />
         <activity android:name=".ui.detail.SettingActivity" />
         <activity android:name=".ui.detail.FeedBackActivity" />
-        <activity android:name=".ui.detail.AboutUsActivity"></activity>
+        <activity android:name=".ui.detail.AboutUsActivity" />
     </application>
 
 </manifest>

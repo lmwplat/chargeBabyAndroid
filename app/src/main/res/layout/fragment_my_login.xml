@@ -6,9 +6,9 @@
     android:background="@color/white" >
 
     <LinearLayout
+        android:id="@+id/ll_fg_my_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:orientation="horizontal"
         android:padding="@dimen/normal_space" >
 
@@ -44,6 +44,40 @@
             android:src="@mipmap/hui_discount_item_rule_arrow" />
     </LinearLayout>
 
+
+    <LinearLayout
+        android:id="@+id/ll_fg_my_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:padding="@dimen/normal_space" >
+
+        <ImageView
+            android:id="@+id/index_my_info_touxiang"
+            android:scaleType="centerInside"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/person_default" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="6dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="3dp" >
+
+            <TextView
+                android:id="@+id/index_my_info_click"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="已经登录"
+                android:textColor="#000"
+                android:textSize="@dimen/title_text_size" />
+        </LinearLayout>
+    </LinearLayout>
 
 
 </LinearLayout>
