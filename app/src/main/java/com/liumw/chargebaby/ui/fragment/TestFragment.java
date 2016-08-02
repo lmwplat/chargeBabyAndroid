@@ -2,8 +2,6 @@ package com.liumw.chargebaby.ui.fragment;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,15 +19,12 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.GroundOverlay;
 import com.amap.api.maps.model.GroundOverlayOptions;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
-import com.amap.api.maps.model.MarkerOptionsCreator;
 import com.liumw.chargebaby.R;
 
 import org.xutils.view.annotation.ContentView;
@@ -204,27 +199,28 @@ public class TestFragment extends Fragment implements LocationSource, AMapLocati
         GroundOverlayOptions options = new GroundOverlayOptions();
         options.anchor(0.5f, 0.5f).transparency(0.1f);
         options.image(BitmapDescriptorFactory.fromResource(imgRes)).positionFromBounds(bounds);
-        return  options;
+        return options;
     }
 
     /**
      * 显示标记
-     * @param x         坐标
-     * @param y         坐标
-     * @param title     点击标记显示的标题
-     * @param snippet   副标题
-     * @param imgRes    要展示图片
+     *
+     * @param x       坐标
+     * @param y       坐标
+     * @param title   点击标记显示的标题
+     * @param snippet 副标题
+     * @param imgRes  要展示图片
      * @return
      */
     private MarkerOptions createMarkOptions(double x, double y, String title, String snippet, int imgRes) {
         MarkerOptions options = new MarkerOptions();
-        if(!TextUtils.isEmpty(title)) {
+        if (!TextUtils.isEmpty(title)) {
             options.title(title);
         }
-        if(!TextUtils.isEmpty(snippet)) {
+        if (!TextUtils.isEmpty(snippet)) {
             options.snippet(snippet);
         }
-        if(imgRes > 0) {
+        if (imgRes > 0) {
             options.icon(BitmapDescriptorFactory.fromResource(imgRes));
         }
         options.position(new LatLng(x, y));
