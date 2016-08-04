@@ -53,15 +53,17 @@
             </intent-filter>
         </activity>
 
-        <!--<service
+        <!--
+            <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" />-->
+            android:process=":remote" />
+        -->
 
-        <service android:name="com.amap.api.location.APSService"
+        <service
+            android:name="com.amap.api.location.APSService"
             android:enabled="true"
-            android:process=":remote"
-            />
+            android:process=":remote" />
 
         <activity
             android:name=".ui.detail.LoginActivity"
@@ -73,6 +75,7 @@
         <activity android:name=".ui.detail.SettingActivity" />
         <activity android:name=".ui.detail.FeedBackActivity" />
         <activity android:name=".ui.detail.AboutUsActivity" />
+        <activity android:name=".ui.SearchActivity" />
     </application>
 
 </manifest>

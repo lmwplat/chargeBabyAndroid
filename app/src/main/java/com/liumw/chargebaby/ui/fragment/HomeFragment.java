@@ -2,6 +2,7 @@ package com.liumw.chargebaby.ui.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import com.liumw.chargebaby.db.DBManager;
 import com.liumw.chargebaby.entity.BDMapData;
 import com.liumw.chargebaby.entity.Charge;
 import com.liumw.chargebaby.ui.MainActivity;
+import com.liumw.chargebaby.ui.SearchActivity;
 import com.liumw.chargebaby.ui.popwindow.SelectPicPopupWindow;
 import com.liumw.chargebaby.utils.ToastUtils;
 
@@ -65,6 +67,8 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
     private MapView mapView;
 
     private AMap aMap;
+
+    private TextView tvSearch;
 
     private AMapLocationClientOption mLocationOption = null;
 
@@ -92,6 +96,7 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         mapView = (MapView) view.findViewById(R.id.mapView);
+        tvSearch = (TextView) view.findViewById(R.id.tv_search);
         mapView.onCreate(savedInstanceState);
         return view;
     }
@@ -102,6 +107,14 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         init(getActivity());
 
         aMap.setOnMarkerClickListener(this);
+
+        tvSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void init(Context context) {
