@@ -7,6 +7,8 @@ package com.liumw.chargebaby.entity;
  */
 public class BDMapData {
 
+    /**充电桩编码*/
+    private String chargeNo;
     /**充电点名称*/
     private String name;
     /**地址*/
@@ -20,7 +22,12 @@ public class BDMapData {
     /**收费标准*/
     private String feeStandard;
 
-    public BDMapData(String name, String address, Double longitude, Double latitude, double distance, String feeStandard) {
+    public BDMapData(){
+
+    }
+
+    public BDMapData(String chargeNo, String name, String address, Double longitude, Double latitude, double distance, String feeStandard) {
+        this.chargeNo = chargeNo;
         this.name = name;
         this.address = address;
         this.longitude = longitude;
@@ -28,14 +35,13 @@ public class BDMapData {
         this.distance = distance;
         this.feeStandard = feeStandard;
     }
-    public BDMapData(){
 
+    public String getChargeNo() {
+        return chargeNo;
     }
 
-    public BDMapData(String name, Double longitude, Double latitude) {
-        this.name = name;
-        this.longitude = longitude;
-        this.latitude = latitude;
+    public void setChargeNo(String chargeNo) {
+        this.chargeNo = chargeNo;
     }
 
     public String getName() {
@@ -84,5 +90,18 @@ public class BDMapData {
 
     public void setFeeStandard(String feeStandard) {
         this.feeStandard = feeStandard;
+    }
+
+    @Override
+    public String toString() {
+        return "BDMapData{" +
+                "chargeNo='" + chargeNo + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", distance=" + distance +
+                ", feeStandard='" + feeStandard + '\'' +
+                '}';
     }
 }

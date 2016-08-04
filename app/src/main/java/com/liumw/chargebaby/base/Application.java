@@ -3,7 +3,7 @@ package com.liumw.chargebaby.base;
 import android.content.Context;
 
 /**
- * Created by Administrator on 2016/7/26 0026.
+ * Created by liumw on 2016/7/26 0026.
  * Email:   1879358765@qq.com
  */
 public class Application extends android.app.Application {

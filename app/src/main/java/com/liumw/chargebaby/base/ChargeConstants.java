@@ -21,6 +21,7 @@ public class ChargeConstants {
     /**公用变量*/
     /**登录信息为null*/
     public static String LOGIN_NULL = "null";
+    public static String PACKAGE_NAME = "com.liumw.chargebaby";
     /***********/
 
 
