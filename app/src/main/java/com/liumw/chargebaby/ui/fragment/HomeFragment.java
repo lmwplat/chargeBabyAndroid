@@ -264,11 +264,12 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
-        Bundle bundle = (Bundle) marker.getObject();
-        String popName = bundle.getString("name");
-        String popFeeStandard = bundle.getString("feeStandard");
-        String popAddress = bundle.getString("address");
-        Double popDistance = bundle.getDouble("distance");
+      //  Bundle bundle = (Bundle) marker.getObject();
+        BDMapData data = (BDMapData) marker.getObject();
+        String popName = data.getName();
+        String popFeeStandard = data.getFeeStandard();
+        String popAddress = data.getAddress();
+        Double popDistance = data.getDistance();
 
 
         Log.e(TAG, "点击了覆盖物");
@@ -284,12 +285,6 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         tv_price.setText(popFeeStandard);
         TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.pop_address);
         tv_address.setText(popAddress);
-        //得到点击的覆盖物的经纬度
-//        LatLng ll = marker.getPosition();
-
-        //让地图以备点击的覆盖物为中心
-        /*MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(ll);
-        mBaiduMap.setMapStatus(status);*/
         return true;
     }
 
@@ -299,11 +294,13 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
     private void getAllCharge() throws DbException {
         LatLng myLatLng = new LatLng(myLatitude, myLongitude);
         List<Charge> all = db.findAll(Charge.class);
+       // List<Charge> all = db.selector(Charge.class).where("area","like","%天%").or("name","like","%酒店%").findAll();
         for(Charge charge : all){
             if (charge.getLatitude() != null && charge.getLongitude() != null){
                 LatLng  chargeLat = new LatLng(charge.getLatitude(), charge.getLongitude());
                 Float distance = AMapUtils.calculateLineDistance(myLatLng, chargeLat);
                 BDMapData bDMapData = new BDMapData();
+                bDMapData.setChargeNo(charge.getChargeNo());
                 bDMapData.setName(charge.getName());
                 bDMapData.setAddress(charge.getAddress());
                 bDMapData.setDistance(distance);
@@ -322,7 +319,7 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         Marker marker = null;
         LatLng point = null;
         MarkerOptions option = null;
-        BitmapDescriptor bitmap =BitmapDescriptorFactory.fromResource(R.mipmap.icon_marka);
+        BitmapDescriptor bitmap =BitmapDescriptorFactory.fromResource(R.mipmap.icon_mark_charge);
         //Marker marker = aMap.addMarker(createMarkOptions(39.936713, 116.386475, "测试1", "测试1内容", R.mipmap.ic_launcher));
         //获取附近的所有充电桩
         getAllCharge();
@@ -331,17 +328,14 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
             point = new LatLng(data.getLatitude(), data.getLongitude());
             option = new MarkerOptions().position(point).icon(bitmap);
             marker = aMap.addMarker(option);
-            //Bundle用于通信
+            /*//Bundle用于通信
             Bundle bundle = new Bundle();
             bundle.putString("name", data.getName());
             bundle.putString("feeStandard", data.getFeeStandard());
             bundle.putString("address", data.getAddress());
-            bundle.putDouble("distance", data.getDistance());
-            marker.setObject(bundle);//将bundle值传入marker中，给baiduMap设置监听时可以得到它
+            bundle.putDouble("distance", data.getDistance());*/
+            marker.setObject(data);//将bundle值传入marker中，给baiduMap设置监听时可以得到它
         }
-        //将地图移动到最后一个标志点
-        /*MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(point);
-        mBaiduMap.setMapStatus(status);*/
 
     }
 }
