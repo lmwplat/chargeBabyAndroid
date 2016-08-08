@@ -10,6 +10,7 @@
     <color name="red">#FF0000</color>
     <color name="gray">#696969</color>
     <color name="silverGray">#c7c7c7</color>
+    <color name="activity_back">#FFE5E5E5</color>
     <color name="darkGray">#333333</color>
     <color name="black">#000000</color>
     <color name="home_search_bg">#e64514</color>

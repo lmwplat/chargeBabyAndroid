@@ -273,6 +273,31 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         return options;
     }
 
+    /**
+     * 显示标记
+     * @param x         坐标
+     * @param y         坐标
+     * @param title     点击标记显示的标题
+     * @param snippet   副标题
+     * @param imgRes    要展示图片
+     * @return
+     */
+    private MarkerOptions createAndMoveMarkOptions(double x, double y, String title, String snippet, int imgRes) {
+        MarkerOptions options = new MarkerOptions();
+        if(!TextUtils.isEmpty(title)) {
+            options.title(title);
+        }
+        if(!TextUtils.isEmpty(snippet)) {
+            options.snippet(snippet);
+        }
+        if(imgRes > 0) {
+            options.icon(BitmapDescriptorFactory.fromResource(imgRes));
+        }
+        options.position(new LatLng(x, y));
+        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(x, y)));
+        return options;
+    }
+
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -356,5 +381,22 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         /*MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(point);
         mBaiduMap.setMapStatus(status);*/
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case 101:
+                Charge item = (Charge) data.getSerializableExtra("data");
+                if(item == null) {
+                    return;
+                }
+                /*MarkerOptions options = createAndMoveMarkOptions(item.getLatitude(), item.getLongitude(), item.getName(), item.getAddress(), -1);
+                aMap.addMarker(options);*/
+                //此处添加标记物或者其他操作
+
+                break;
+        }
     }
 }

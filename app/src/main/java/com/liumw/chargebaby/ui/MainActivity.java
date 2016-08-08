@@ -1,21 +1,16 @@
 package com.liumw.chargebaby.ui;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.liumw.chargebaby.R;
-import com.liumw.chargebaby.base.Application;
 import com.liumw.chargebaby.db.DBManager;
-import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.ui.fragment.HomeFragment;
 import com.liumw.chargebaby.ui.fragment.MyFragment;
 import com.liumw.chargebaby.ui.fragment.TestFragment;

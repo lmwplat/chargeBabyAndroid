@@ -1,10 +1,12 @@
 package com.liumw.chargebaby.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +16,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.liumw.chargebaby.R;
+import com.liumw.chargebaby.db.DBManager;
+import com.liumw.chargebaby.entity.Charge;
 
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,13 +39,23 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     @ViewInject(R.id.recyclerView)
     private RecyclerView recyclerView;
 
+    private List<Charge> mList = new ArrayList<>();
+
+    private DbManager mDb;
+
+    private SearchAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         x.view().inject(this);
+        initListener();
+        DbManager.DaoConfig daoConfig= DBManager.getDaoConfig();
+        mDb = x.getDb(daoConfig);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new SearchAdapter());
+        mAdapter = new SearchAdapter();
+        recyclerView.setAdapter(mAdapter);
         ivBack.setOnClickListener(this);
     }
 
@@ -49,6 +68,24 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    private void initListener() {
+        tvSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String info = etSearch.getText().toString();
+                if(TextUtils.isEmpty(info)) {
+                    return;
+                }
+                try {
+                    mList = mDb.selector(Charge.class).where("area","like","%天%").or("name","like","%酒店%").findAll();
+                    mAdapter.notifyDataSetChanged();
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
         @Override
@@ -58,21 +95,43 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         @Override
         public void onBindViewHolder(SearchViewHolder holder, int position) {
-            holder.t.setText(position + "");
+            final Charge item = mList.get(position);
+            holder.tvName.setText(item.getName());
+            holder.tvArea.setText(item.getArea());
+            holder.tvDetail.setText(item.getDetail());
+            holder.tvAddress.setText(item.getAddress());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent();
+                    intent.putExtra("data", item);
+                    setResult(101, intent);
+                    finish();
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
-            return 10;
+            return mList.size();
         }
 
         class SearchViewHolder extends RecyclerView.ViewHolder {
 
-            TextView t;
+            TextView tvName;
+
+            TextView tvArea;
+
+            TextView tvDetail;
+
+            TextView tvAddress;
 
             public SearchViewHolder(View itemView) {
                 super(itemView);
-                t = (TextView) itemView.findViewById(R.id.tv_title);
+                tvName = (TextView) itemView.findViewById(R.id.tv_name);
+                tvArea = (TextView) itemView.findViewById(R.id.tv_area);
+                tvDetail = (TextView) itemView.findViewById(R.id.tv_detail);
+                tvAddress = (TextView) itemView.findViewById(R.id.tv_address);
             }
         }
     }
