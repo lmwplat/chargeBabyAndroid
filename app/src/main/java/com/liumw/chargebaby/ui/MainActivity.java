@@ -1,6 +1,7 @@
 package com.liumw.chargebaby.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -11,15 +12,22 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.liumw.chargebaby.R;
 import com.liumw.chargebaby.base.Application;
 import com.liumw.chargebaby.db.DBManager;
+import com.liumw.chargebaby.entity.ApkInfo;
 import com.liumw.chargebaby.entity.User;
+import com.liumw.chargebaby.service.UpdateService;
 import com.liumw.chargebaby.ui.fragment.HomeFragment;
 import com.liumw.chargebaby.ui.fragment.MyFragment;
 import com.liumw.chargebaby.ui.fragment.TestFragment;
+import com.liumw.chargebaby.utils.IntentUtils;
+import com.liumw.chargebaby.vo.Json;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
@@ -43,7 +51,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     private MyFragment my;
     private long exitTime = 0;//两次按返回退出
 
-
     private SharedPreferences sp;
 
     public DBManager dbHelper;
@@ -66,10 +73,31 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
         group.setOnCheckedChangeListener(this);
         //切换不同的fragment
         changeFragment(0);
-        //从共享参数获取数据
-        /*sp = getSharedPreferences(Application.SP_FILE_NAME, Context.MODE_PRIVATE);
-        String str = sp.getString(Application.LONIN_INFO, null);
-        Log.e(TAG, "从sp中获取" + str);*/
+
+        int versionNo = IntentUtils.getCurrentVersionCode(this);
+        Log.i(TAG, "versionNo ==" + String.valueOf(versionNo));
+        if (versionNo == -1){
+            return;
+        }
+
+        // 启动线程执行下载任务
+        new Thread(downloadRun).start();
+
+    }
+
+    /**
+     * 判断是否需要升级
+     */
+    private ApkInfo isUpdate() {
+        ApkInfo apkInfo = new ApkInfo();
+
+        int versionNo = IntentUtils.getCurrentVersionCode(this);
+        Log.i(TAG, "versionNo ==" + String.valueOf(versionNo));
+        if (versionNo == -1){
+            return null;
+        }
+        apkInfo = IntentUtils.checkApkVersion(versionNo);
+        return apkInfo;
     }
 
     @Override
@@ -145,7 +173,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
             exitTime = System.currentTimeMillis();
         } else {
             finish();
-            //System.exit(0);
         }
     }
 
@@ -153,9 +180,25 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     public void finish() {
         // TODO Auto-generated method stub
         super.finish();
-        //	this.overridePendingTransition(0,R.anim.activity_close);
     }
+    /**
+     * 下载线程
+     */
+    Runnable downloadRun = new Runnable(){
 
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            if (IntentUtils.isConnect(getApplicationContext())){
+                ApkInfo apkInfo = isUpdate();
+                if (apkInfo != null){
+                    Log.i(TAG, "开始下载更新");
+                    Intent service = new Intent(getApplicationContext(),UpdateService.class);
+                    startService(service);
+                }
+            }
+        }
+    };
 
 }
 
