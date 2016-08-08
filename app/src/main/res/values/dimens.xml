@@ -9,8 +9,8 @@
     <dimen name="text_size_small">14sp</dimen>
     <dimen name="text_size_index_home_title">16sp</dimen>
     <dimen name="text_size_pop_name">20sp</dimen>
-    <dimen name="text_size_pop_address">14sp</dimen>
-    <dimen name="text_size_pop_price">12sp</dimen>
+    <dimen name="text_size_pop_address">16sp</dimen>
+    <dimen name="text_size_pop_price">16sp</dimen>
 
     <!-- 间距 -->
     <dimen name="normal_space">10dp</dimen>
