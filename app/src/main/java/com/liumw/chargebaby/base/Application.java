@@ -9,7 +9,8 @@ import android.content.Context;
 public class Application extends android.app.Application {
 
     /**服务器*/
-    public static final String SERVER = "http://192.168.0.102:8080/chargebabyforplat/";
+    public static final String SERVER = "http://192.168.0.100:8080/chargebabyforplat/";
+//    public static final String SERVER = "http://120.76.194.88:8080/chargebabyforplat/";
     /**远程登录方法接口*/
     public static final String ACTION_LOGIN = "userController/login";
     /**远程注册方法接口*/
@@ -18,6 +19,9 @@ public class Application extends android.app.Application {
     public static final String ACTION_CONFIRM = "userController/confirm";
     /**远程提交意见反馈*/
     public static final String ACTION_FEEDBACK_CONFIRM = "feedbackController/feedbackConfirm";
+    /**APK版本检测*/
+    public static final String ACTION_APK_CHECK = "apkVersion/checkApkVersion";
+
 
     /**SharedPreferences 存储的文件名*/
     public static final String SP_FILE_NAME = "share_data";
@@ -25,6 +29,8 @@ public class Application extends android.app.Application {
     public static final String LONIN_INFO = "loginInfo";
 
     /***/
+    public static final String APK_DOWNLOAD_ADDRESS = "http://120.76.194.88:8070/apk/";
+    public static final String APK_INSTALL_NAME = "chargebaby.apk";
 
     public static Context context;
 

@@ -48,4 +48,14 @@ public class Json {
     public void setObj(Object obj) {
         this.obj = obj;
     }
+
+    @Override
+    public String toString() {
+        return "Json{" +
+                "result_code='" + result_code + '\'' +
+                ", success=" + success +
+                ", msg='" + msg + '\'' +
+                ", obj=" + obj +
+                '}';
+    }
 }

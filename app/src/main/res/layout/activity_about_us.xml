@@ -34,6 +34,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+        <LinearLayout
+            android:id="@+id/ll_setting_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:padding="@dimen/normal_space" >
+
+            <TextView
+                android:id="@+id/tv_setting_test"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/normal_space"
+                android:textColor="@color/red"
+                android:text="test"
+                android:textSize="@dimen/text_size_small" />
+
+        </LinearLayout>
+
 
     </FrameLayout>
 </LinearLayout>

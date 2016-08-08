@@ -16,6 +16,7 @@ import com.liumw.chargebaby.R;
 import com.liumw.chargebaby.base.Application;
 import com.liumw.chargebaby.base.ChargeConstants;
 import com.liumw.chargebaby.entity.User;
+import com.liumw.chargebaby.ui.navi.CustomTrafficBarViewActivity;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 
 import org.xutils.view.annotation.ContentView;
@@ -42,6 +43,9 @@ public class SettingActivity extends AppCompatActivity {
     @ViewInject(R.id.tv_setting_logout)
     TextView tv_setting_logout;
 
+    @ViewInject(R.id.ll_setting_test)
+    LinearLayout ll_setting_test;
+
     private User user;
 
     @Override
@@ -56,7 +60,7 @@ public class SettingActivity extends AppCompatActivity {
         }
     }
 
-    @Event(value={R.id.setting_back, R.id.setting_feedback, R.id.setting_about_us, R.id.tv_setting_logout},type=View.OnClickListener.class)
+    @Event(value={R.id.setting_back, R.id.setting_feedback, R.id.setting_about_us, R.id.tv_setting_logout, R.id.ll_setting_test},type=View.OnClickListener.class)
     private void onClick(View view){
         //必须为private
         switch (view.getId()) {
@@ -64,12 +68,15 @@ public class SettingActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.setting_feedback:
+                Log.e(TAG, "反馈");
                 startActivity(new Intent(this, FeedBackActivity.class));
                 break;
             case R.id.setting_about_us:
+                Log.e(TAG, "关于我们");
                 startActivity(new Intent(this, AboutUsActivity.class));
                 break;
             case R.id.tv_setting_logout:
+                Log.e(TAG, "退出");
                 logout();
                 setResult(ChargeConstants.LOGOUT_SUCCESS_RESULT_CODE);
                 finish();

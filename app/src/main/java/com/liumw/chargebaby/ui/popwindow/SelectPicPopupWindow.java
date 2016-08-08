@@ -2,6 +2,7 @@ package com.liumw.chargebaby.ui.popwindow;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -10,15 +11,21 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.liumw.chargebaby.R;
 
-public class SelectPicPopupWindow extends PopupWindow {
+import org.xutils.view.annotation.ViewInject;
+
+public class SelectPicPopupWindow extends PopupWindow implements View.OnClickListener {
 
 
 	//private Button btn_take_photo, btn_pick_photo, btn_cancel;
 	private View mMenuView;
+	@ViewInject(R.id.ll_pop_navi)
+	private LinearLayout ll_pop_navi;
+
 
 	public SelectPicPopupWindow(Activity context,OnClickListener itemsOnClick) {
 		super(context);
@@ -58,4 +65,12 @@ public class SelectPicPopupWindow extends PopupWindow {
 
 	}
 
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()) {
+			case R.id.ll_pop_navi:
+				//this.getContentView().star
+				break;
+		}
+	}
 }

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.liumw.chargebaby"
-    android:versionCode="1"
-    android:versionName="1.0">
+    android:versionCode="2"
+    android:versionName="beta 1.0">
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="15"/>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -76,6 +80,15 @@
         <activity android:name=".ui.detail.FeedBackActivity" />
         <activity android:name=".ui.detail.AboutUsActivity" />
         <activity android:name=".ui.SearchActivity" />
+
+        <service
+            android:name=".service.UpdateService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".ui.navi.CustomTrafficBarViewActivity" />
+        <activity android:name=".ui.navi.BasicNaviActivity" />
+        <activity android:name=".ui.navi.GPSNaviActivity"></activity>
     </application>
 
 </manifest>
