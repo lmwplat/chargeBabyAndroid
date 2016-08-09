@@ -33,7 +33,6 @@ import java.net.URLEncoder;
 public class SelectPicPopupWindow extends PopupWindow  {
 
 	private static final String TAG = "SelectPicPopupWindow";
-	//private Button btn_take_photo, btn_pick_photo, btn_cancel;
 	private View mMenuView;
 
 
@@ -46,8 +45,8 @@ public class SelectPicPopupWindow extends PopupWindow  {
 		LinearLayout ll_pop_navi = (LinearLayout) mMenuView
 				.findViewById(R.id.ll_pop_navi);
 
-		TextView tv_pop_address = (TextView) mMenuView
-				.findViewById(R.id.tv_pop_address);
+		LinearLayout tv_pop_main_detail = (LinearLayout) mMenuView
+				.findViewById(R.id.tv_pop_main_detail);
 
 		//设置SelectPicPopupWindow的View
 		this.setContentView(mMenuView);
@@ -94,7 +93,7 @@ public class SelectPicPopupWindow extends PopupWindow  {
 		});
 
 
-		tv_pop_address.setOnClickListener(new OnClickListener() {
+		tv_pop_main_detail.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Log.i(TAG, "充电点详情");

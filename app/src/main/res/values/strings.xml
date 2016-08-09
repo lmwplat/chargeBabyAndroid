@@ -21,8 +21,8 @@
     <!--Strings for register -->
     <string name="title_activity_register">注册</string>
     <string name="register_tip_user">请输入您的用户名</string>
-    <string name="register_tip_pwd1">请设置您密码</string>
-    <string name="register_tip_pwd2">请重复上面密码</string>
+    <string name="register_tip_pwd1">请设置您密码(长度6-20)</string>
+    <string name="register_tip_pwd2">请重复上面密码(长度6-20)</string>
     <string name="register_btn_text">注册</string>
     <string name="confirm_btn_text">确认</string>
 
@@ -43,6 +43,7 @@
     <string name="about_us">关于我们</string>
 
     <!--String for charge detail-->
+    <string name="check_detail">详细情况</string>
     <string name="charge_detail">充电点详情</string>
 
 

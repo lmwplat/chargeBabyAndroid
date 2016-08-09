@@ -8,7 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:orientation="horizontal"
         android:padding="@dimen/normal_space" >
 
@@ -28,14 +27,5 @@
                 android:textColor="@color/silverGray"
                 android:textSize="@dimen/text_size_pop_address" />
         </LinearLayout>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
-            android:src="@mipmap/hui_discount_item_rule_arrow" />
     </LinearLayout>
-
-
-
 </LinearLayout>

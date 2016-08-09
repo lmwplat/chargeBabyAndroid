@@ -8,14 +8,9 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="15" />
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -35,6 +30,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+
     <application
         android:name=".utils.ChargeBabyApp"
         android:allowBackup="true"
@@ -45,6 +41,22 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="8ec0d43b659c3a312c55fb4294a6f45c" />
+        <!-- 配置bugly APP ID -->
+        <meta-data
+            android:name="BUGLY_APPID"
+            android:value="900046362" />
+        <!-- 配置bugly APP版本号 -->
+        <meta-data
+            android:name="BUGLY_APP_VERSION"
+            android:value="beta 1.0" />
+        <!-- 配置bugly APP渠道号 -->
+        <meta-data
+            android:name="BUGLY_APP_CHANNEL"
+            android:value="120" />
+        <!-- 配置Bugly调试模式（true或者false）-->
+        <meta-data
+            android:name="BUGLY_ENABLE_DEBUG"
+            android:value="true" />
 
         <activity
             android:name=".ui.MainActivity"

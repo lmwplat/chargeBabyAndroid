@@ -25,6 +25,7 @@ import com.liumw.chargebaby.ui.fragment.MyFragment;
 import com.liumw.chargebaby.ui.fragment.TestFragment;
 import com.liumw.chargebaby.utils.IntentUtils;
 import com.liumw.chargebaby.vo.Json;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -59,6 +60,9 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //配置bugly
+        CrashReport.initCrashReport(getApplicationContext());
+
         setContentView(R.layout.activity_main);
         x.view().inject(this);
         //首次执行导入.db文件

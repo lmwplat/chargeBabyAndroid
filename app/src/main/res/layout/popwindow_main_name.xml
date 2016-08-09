@@ -52,12 +52,6 @@
                     android:text="2.5/km.h"
                     android:textColor="#0a0ab5"
                     android:textSize="@dimen/text_size_pop_price" />
-
             </LinearLayout>
         </LinearLayout>
-
-
-
-
-
 </LinearLayout>

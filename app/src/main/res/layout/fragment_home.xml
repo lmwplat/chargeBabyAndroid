@@ -41,7 +41,7 @@
             android:paddingLeft="22dp"
             android:paddingRight="14dp"
             android:paddingTop="7dp"
-            android:text="输入区域、充点电        "
+            android:text="输入区域、充电点        "
             android:textColor="@color/white" />
 
     </LinearLayout>

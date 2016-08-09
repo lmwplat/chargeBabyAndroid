@@ -421,7 +421,14 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
                 tv_price.setText(item.getFeeStandard());
                 TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_address);
                 tv_address.setText(item.getAddress());
-
+                TextView tv_pop_main_detail_ac_builded = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_ac_builded);
+                tv_pop_main_detail_ac_builded.setText(item.getAcBuilded());
+                TextView tv_pop_main_detail_ac_building = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_ac_building);
+                tv_pop_main_detail_ac_building.setText(item.getAcBuilding());
+                TextView tv_pop_main_detail_dc_builded = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_dc_builded);
+                tv_pop_main_detail_dc_builded.setText(item.getDcBuilded());
+                TextView tv_pop_main_detail_dc_building = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_dc_building);
+                tv_pop_main_detail_dc_building.setText(item.getDcBuilding());
                 break;
         }
     }

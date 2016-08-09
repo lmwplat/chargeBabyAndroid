@@ -29,6 +29,12 @@
                 android:background="#fafafa" />
 
             <include layout="@layout/popwindow_main_price" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#fafafa" />
+
+            <include layout="@layout/popwindow_main_detail" />
 
             <View
                 android:layout_width="match_parent"
@@ -36,6 +42,7 @@
                 android:background="#fafafa" />
 
             <include layout="@layout/popwindow_main_address" />
+
         </LinearLayout>
     </com.liumw.chargebaby.myviews.VerticalScrollView>
 

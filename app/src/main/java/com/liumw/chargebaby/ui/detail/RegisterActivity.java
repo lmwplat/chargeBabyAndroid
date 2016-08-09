@@ -67,7 +67,7 @@ public class RegisterActivity extends Activity {
 
             @Override
             public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-                if (et_pw2.getText().toString().length() >= 6) {
+                if (et_pw2.getText().toString().length() >= 6 && et_pw2.getText().toString().length() <=20) {
                     bt_register.setEnabled(true);
                     Log.e(TAG, "register-set-true");
                 } else {

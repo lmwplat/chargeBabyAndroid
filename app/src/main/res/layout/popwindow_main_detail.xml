@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/normal_space" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="在建交流电桩"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:textColor="@color/abc_secondary_text_material_light"
+            android:textSize="@dimen/text_size_detail_address" />
+        <TextView
+            android:id="@+id/tv_pop_main_detail_ac_builded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_light"
+            android:textSize="@dimen/text_size_detail_address"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已建交流电桩"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:textColor="@color/abc_secondary_text_material_light"
+            android:textSize="@dimen/text_size_detail_address"
+            />
+        <TextView
+            android:id="@+id/tv_pop_main_detail_ac_building"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_light"
+            android:textSize="@dimen/text_size_detail_address"
+            android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/normal_space" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="在建直流电桩"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:textColor="@color/abc_secondary_text_material_light"
+            android:textSize="@dimen/text_size_detail_address" />
+        <TextView
+            android:id="@+id/tv_pop_main_detail_dc_builded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_light"
+            android:textSize="@dimen/text_size_detail_address"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已建直流电桩"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:textColor="@color/abc_secondary_text_material_light"
+            android:textSize="@dimen/text_size_detail_address"
+            />
+        <TextView
+            android:id="@+id/tv_pop_main_detail_dc_building"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_light"
+            android:textSize="@dimen/text_size_detail_address"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/normal_bg_color" />
+
+    <LinearLayout
+        android:id="@+id/tv_pop_main_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right|center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/normal_space" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/silverGray"
+            android:layout_gravity="right|center_horizontal|center_vertical"
+            android:textSize="@dimen/text_size_pop_address"
+            android:paddingRight="5dp"
+            android:text="@string/check_detail"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:src="@mipmap/hui_discount_item_rule_arrow" />
+    </LinearLayout>
+
+
+</LinearLayout>
