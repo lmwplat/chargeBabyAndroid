@@ -22,10 +22,9 @@
             android:paddingLeft="3dp" >
 
             <TextView
-                android:id="@+id/pop_address"
+                android:id="@+id/tv_pop_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="广东省广州市越秀区先烈南路74号"
                 android:textColor="@color/silverGray"
                 android:textSize="@dimen/text_size_pop_address" />
         </LinearLayout>

@@ -10,37 +10,36 @@
         android:id="@+id/my_setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:padding="@dimen/normal_space" >
 
-        <TextView
+        <ImageView
+            android:scaleType="centerInside"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_setting" />
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="6dp"
             android:layout_weight="1"
-            android:drawableLeft="@mipmap/android_smaller"
-            android:drawablePadding="3dp"
-            android:gravity="center_vertical"
-            android:text="设置"
-            android:textSize="@dimen/text_size_default" />
+            android:orientation="vertical"
+            android:paddingLeft="3dp" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:gravity="center_vertical"
-            android:text="NEW"
-            android:visibility="gone" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="设置"
+                android:textColor="#000"
+                android:textSize="@dimen/text_size_default" />
+        </LinearLayout>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:src="@mipmap/new_icon" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
             android:src="@mipmap/hui_discount_item_rule_arrow" />
     </LinearLayout>
 

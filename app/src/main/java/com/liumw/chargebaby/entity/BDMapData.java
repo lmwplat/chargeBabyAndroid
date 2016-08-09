@@ -17,6 +17,14 @@ public class BDMapData {
     private Double longitude;
     /**纬度*/
     private Double latitude;
+
+
+
+    /**本人经度*/
+
+    private Double myLongitude;
+    /**本人纬度*/
+    private Double MyLatitude;
     /** 距离*/
     private double distance;
     /**收费标准*/
@@ -91,6 +99,21 @@ public class BDMapData {
     public void setFeeStandard(String feeStandard) {
         this.feeStandard = feeStandard;
     }
+    public Double getMyLongitude() {
+        return myLongitude;
+    }
+
+    public void setMyLongitude(Double myLongitude) {
+        this.myLongitude = myLongitude;
+    }
+
+    public Double getMyLatitude() {
+        return MyLatitude;
+    }
+
+    public void setMyLatitude(Double myLatitude) {
+        MyLatitude = myLatitude;
+    }
 
     @Override
     public String toString() {
@@ -100,6 +123,8 @@ public class BDMapData {
                 ", address='" + address + '\'' +
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
+                ", myLongitude=" + myLongitude +
+                ", MyLatitude=" + MyLatitude +
                 ", distance=" + distance +
                 ", feeStandard='" + feeStandard + '\'' +
                 '}';

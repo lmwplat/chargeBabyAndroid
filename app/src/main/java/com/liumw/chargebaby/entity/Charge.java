@@ -3,6 +3,7 @@ package com.liumw.chargebaby.entity;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Date;
  * Email:   1879358765@qq.com
  */
 @Table(name = "charge")
-public class Charge {
+public class Charge implements Serializable {
     private Long id;
     /**创建时间*/
     @Column(name = "create_time")

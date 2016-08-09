@@ -17,6 +17,7 @@ import com.liumw.chargebaby.base.Application;
 import com.liumw.chargebaby.base.ChargeConstants;
 import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.ui.navi.CustomTrafficBarViewActivity;
+import com.liumw.chargebaby.utils.IntentUtils;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 
 import org.xutils.view.annotation.ContentView;
@@ -42,9 +43,10 @@ public class SettingActivity extends AppCompatActivity {
     private LinearLayout ll_setting_logout;
     @ViewInject(R.id.tv_setting_logout)
     TextView tv_setting_logout;
+    @ViewInject(R.id.setting_version)
+    TextView setting_version;
 
-    @ViewInject(R.id.ll_setting_test)
-    LinearLayout ll_setting_test;
+
 
     private User user;
 
@@ -52,6 +54,8 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        String versionName = IntentUtils.getCurrentVersionName(this);
+        setting_version.setText(versionName);
         user = LoginInfoUtils.getLoginInfo(this);
         if (user == null){
             ll_setting_logout.setVisibility(View.GONE);
@@ -60,7 +64,7 @@ public class SettingActivity extends AppCompatActivity {
         }
     }
 
-    @Event(value={R.id.setting_back, R.id.setting_feedback, R.id.setting_about_us, R.id.tv_setting_logout, R.id.ll_setting_test},type=View.OnClickListener.class)
+    @Event(value={R.id.setting_back, R.id.setting_feedback, R.id.setting_about_us, R.id.tv_setting_logout},type=View.OnClickListener.class)
     private void onClick(View view){
         //必须为private
         switch (view.getId()) {

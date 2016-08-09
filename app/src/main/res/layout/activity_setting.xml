@@ -121,13 +121,20 @@
                     android:textSize="@dimen/text_size_default" />
 
                 <TextView
-                    android:id="@+id/setting_version"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawablePadding="3dp"
                     android:gravity="right"
-                    android:text="Build Version 1.0"
+                    android:text="Build Version "
+                    android:textSize="@dimen/text_size_default" />
+                <TextView
+                    android:id="@+id/setting_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="3dp"
+                    android:gravity="right"
+                    android:text="1.0"
                     android:textSize="@dimen/text_size_default" />
 
             </LinearLayout>

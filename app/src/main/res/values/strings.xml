@@ -39,6 +39,12 @@
     <string name="search">搜索</string>
     <string name="search_keyword">搜索关键字</string>
 
+    <!--String for about us-->
+    <string name="about_us">关于我们</string>
+
+    <!--String for charge detail-->
+    <string name="charge_detail">充电点详情</string>
+
 
     <!--语音-->
     <string name="app_id">输入您讯飞的appid</string>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -22,12 +23,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
@@ -46,6 +49,7 @@ import com.liumw.chargebaby.ui.MainActivity;
 import com.liumw.chargebaby.ui.SearchActivity;
 import com.liumw.chargebaby.ui.popwindow.SelectPicPopupWindow;
 import com.liumw.chargebaby.utils.ToastUtils;
+import com.liumw.chargebaby.vo.Data;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
@@ -96,7 +100,7 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         mapView = (MapView) view.findViewById(R.id.mapView);
-        tvSearch = (TextView) view.findViewById(R.id.tv_search);
+        tvSearch = (TextView) view.findViewById(R.id.tv_home_search);
         mapView.onCreate(savedInstanceState);
         return view;
     }
@@ -112,7 +116,7 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SearchActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,101);
             }
         });
     }
@@ -273,6 +277,31 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         return options;
     }
 
+    /**
+     * 显示标记
+     * @param x         坐标
+     * @param y         坐标
+     * @param title     点击标记显示的标题
+     * @param snippet   副标题
+     * @param imgRes    要展示图片
+     * @return
+     */
+    private MarkerOptions createAndMoveMarkOptions(double x, double y, String title, String snippet, int imgRes) {
+        MarkerOptions options = new MarkerOptions();
+        if(!TextUtils.isEmpty(title)) {
+            options.title(title);
+        }
+        if(!TextUtils.isEmpty(snippet)) {
+            options.snippet(snippet);
+        }
+        if(imgRes > 0) {
+            options.icon(BitmapDescriptorFactory.fromResource(imgRes));
+        }
+        options.position(new LatLng(x, y));
+        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(x, y)));
+        return options;
+    }
+
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -287,7 +316,7 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
 
         Log.e(TAG, "点击了覆盖物");
         //实例化SelectPicPopupWindow
-        menuWindow = new SelectPicPopupWindow(getActivity(), null);
+        menuWindow = new SelectPicPopupWindow(getActivity(), data);
         //显示窗口
         menuWindow.showAtLocation(getActivity().findViewById(R.id.main_content), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
 
@@ -296,7 +325,7 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         tv_pop_name.setText(popName);
         TextView tv_price = (TextView) menuWindow.getContentView().findViewById(R.id.pop_price);
         tv_price.setText(popFeeStandard);
-        TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.pop_address);
+        TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_address);
         tv_address.setText(popAddress);
         return true;
     }
@@ -305,13 +334,15 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
      * 获取附近的所有充电桩
      */
     private void getAllCharge() throws DbException {
+        Float distance = null;
         LatLng myLatLng = new LatLng(myLatitude, myLongitude);
         List<Charge> all = db.findAll(Charge.class);
-       // List<Charge> all = db.selector(Charge.class).where("area","like","%天%").or("name","like","%酒店%").findAll();
         for(Charge charge : all){
             if (charge.getLatitude() != null && charge.getLongitude() != null){
                 LatLng  chargeLat = new LatLng(charge.getLatitude(), charge.getLongitude());
-                Float distance = AMapUtils.calculateLineDistance(myLatLng, chargeLat);
+                if (myLatitude != null && myLongitude != null){
+                    distance = AMapUtils.calculateLineDistance(myLatLng, chargeLat);
+                }
                 BDMapData bDMapData = new BDMapData();
                 bDMapData.setChargeNo(charge.getChargeNo());
                 bDMapData.setName(charge.getName());
@@ -341,14 +372,57 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
             point = new LatLng(data.getLatitude(), data.getLongitude());
             option = new MarkerOptions().position(point).icon(bitmap);
             marker = aMap.addMarker(option);
-            /*//Bundle用于通信
-            Bundle bundle = new Bundle();
-            bundle.putString("name", data.getName());
-            bundle.putString("feeStandard", data.getFeeStandard());
-            bundle.putString("address", data.getAddress());
-            bundle.putDouble("distance", data.getDistance());*/
             marker.setObject(data);//将bundle值传入marker中，给baiduMap设置监听时可以得到它
         }
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case 101:
+                Charge item = (Charge) data.getSerializableExtra("data");
+                if(item == null) {
+                    return;
+                }
+
+                //此处添加标记物或者其他操作
+                //刷新位置
+                LatLng desLatLng = new LatLng(item.getLatitude(), item.getLongitude());
+                CameraUpdate update =CameraUpdateFactory.newLatLngZoom(desLatLng, 18);
+                aMap.moveCamera(update);
+                LatLng myLatLng = new LatLng(myLatitude, myLongitude);
+                if(myLatitude == null || myLongitude == null){
+                    return;
+                }
+                Float distance = AMapUtils.calculateLineDistance(myLatLng, desLatLng);
+                //弹出pop
+                BDMapData bdMapData = new BDMapData();
+                bdMapData.setChargeNo(item.getChargeNo());
+                bdMapData.setLongitude(item.getLongitude());
+                bdMapData.setLatitude(item.getLatitude());
+                bdMapData.setFeeStandard(item.getFeeStandard());
+                bdMapData.setAddress(item.getAddress());
+                bdMapData.setName(item.getName());
+                bdMapData.setMyLatitude(myLatitude);
+                bdMapData.setMyLongitude(myLongitude);
+                bdMapData.setDistance(distance);
+
+                //实例化SelectPicPopupWindow
+                menuWindow = new SelectPicPopupWindow(getActivity(), bdMapData);
+                //显示窗口
+                menuWindow.showAtLocation(getActivity().findViewById(R.id.main_content), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+
+
+                TextView tv_pop_name = (TextView) menuWindow.getContentView().findViewById(R.id.pop_name);
+                tv_pop_name.setText(item.getName());
+                TextView tv_price = (TextView) menuWindow.getContentView().findViewById(R.id.pop_price);
+                tv_price.setText(item.getFeeStandard());
+                TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_address);
+                tv_address.setText(item.getAddress());
+
+                break;
+        }
     }
 }

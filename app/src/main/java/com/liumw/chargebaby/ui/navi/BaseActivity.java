@@ -38,40 +38,35 @@ import java.util.List;
 
 public class BaseActivity extends Activity implements AMapNaviListener, AMapNaviViewListener {
 
-    protected AMapNaviView mAMapNaviView;
-    protected AMapNavi mAMapNavi;
-    protected TTSController mTtsManager;
-    protected NaviLatLng mEndLatlng = new NaviLatLng(39.925846, 116.432765);
-    protected NaviLatLng mStartLatlng = new NaviLatLng(39.925041, 116.437901);
-    protected final List<NaviLatLng> sList = new ArrayList<NaviLatLng>();
-    protected final List<NaviLatLng> eList = new ArrayList<NaviLatLng>();
-    protected List<NaviLatLng> mWayPointList;
+    AMapNaviView mAMapNaviView;
+    AMapNavi mAMapNavi;
+    TTSController mTtsManager;
+    NaviLatLng mEndLatlng = new NaviLatLng(39.925846, 116.432765);
+    NaviLatLng mStartLatlng = new NaviLatLng(39.925041, 116.437901);
+    List<NaviLatLng> mStartList = new ArrayList<NaviLatLng>();
+    List<NaviLatLng> mEndList = new ArrayList<NaviLatLng>();
+    List<NaviLatLng> mWayPointList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        //实例化语音引擎
         mTtsManager = TTSController.getInstance(getApplicationContext());
         mTtsManager.init();
         mTtsManager.startSpeaking();
 
-        //
         mAMapNavi = AMapNavi.getInstance(getApplicationContext());
         mAMapNavi.addAMapNaviListener(this);
         mAMapNavi.addAMapNaviListener(mTtsManager);
-
-        //设置模拟导航的行车速度
-        mAMapNavi.setEmulatorNaviSpeed(75);
-        sList.add(mStartLatlng);
-        eList.add(mEndLatlng);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mAMapNaviView.onResume();
+        mStartList.add(mStartLatlng);
+        mEndList.add(mEndLatlng);
     }
 
     @Override
@@ -89,43 +84,30 @@ public class BaseActivity extends Activity implements AMapNaviListener, AMapNavi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAMapNaviView.onDestroy();
-        //since 1.6.0 不再在naviview destroy的时候自动执行AMapNavi.stopNavi();请自行执行
-        mAMapNavi.stopNavi();
-        mAMapNavi.destroy();
-        mTtsManager.destroy();
+        if (mAMapNaviView != null) {
+            mAMapNaviView.onDestroy();
+        }
+        //since 1.6.0
+        //不再在naviview destroy的时候自动执行AMapNavi.stopNavi();
+        //请自行执行
+        if (mAMapNavi != null) {
+
+            mAMapNavi.stopNavi();
+            mAMapNavi.destroy();
+        }
+        if (mTtsManager != null) {
+
+            mTtsManager.destroy();
+        }
     }
 
     @Override
     public void onInitNaviFailure() {
-        Toast.makeText(this, "init navi Failed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onInitNaviSuccess() {
-        /**
-         * 方法:
-         *   int strategy=mAMapNavi.strategyConvert(congestion, avoidhightspeed, cost, hightspeed, multipleroute);
-         * 参数:
-         * @congestion 躲避拥堵
-         * @avoidhightspeed 不走高速
-         * @cost 避免收费
-         * @hightspeed 高速优先
-         * @multipleroute 多路径
-         *
-         * 说明:
-         *      以上参数都是boolean类型，其中multipleroute参数表示是否多条路线，如果为true则此策略会算出多条路线。
-         * 注意:
-         *      不走高速与高速优先不能同时为true
-         *      高速优先与避免收费不能同时为true
-         */
-        int strategy=0;
-        try {
-            strategy=mAMapNavi.strategyConvert(true, false, false, false, false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mAMapNavi.calculateDriveRoute(sList, eList, mWayPointList,strategy);
+        mAMapNavi.calculateDriveRoute(mStartList, mEndList, mWayPointList, PathPlanningStrategy.DRIVING_DEFAULT);
     }
 
     @Override
@@ -134,21 +116,22 @@ public class BaseActivity extends Activity implements AMapNaviListener, AMapNavi
 
     @Override
     public void onTrafficStatusUpdate() {
-
     }
 
     @Override
     public void onLocationChange(AMapNaviLocation location) {
-
     }
 
+    //这里进行语音播放
     @Override
     public void onGetNavigationText(int type, String text) {
-
+        mTtsManager.playText(text);
     }
+
 
     @Override
     public void onEndEmulatorNavi() {
+
     }
 
     @Override
@@ -157,7 +140,7 @@ public class BaseActivity extends Activity implements AMapNaviListener, AMapNavi
 
     @Override
     public void onCalculateRouteSuccess() {
-        mAMapNavi.startNavi(NaviType.EMULATOR);
+
     }
 
     @Override
@@ -166,30 +149,28 @@ public class BaseActivity extends Activity implements AMapNaviListener, AMapNavi
 
     @Override
     public void onReCalculateRouteForYaw() {
-
     }
 
     @Override
     public void onReCalculateRouteForTrafficJam() {
-
     }
 
     @Override
     public void onArrivedWayPoint(int wayID) {
-
     }
 
     @Override
     public void onGpsOpenStatus(boolean enabled) {
+
     }
 
     @Override
     public void onNaviSetting() {
+
     }
 
     @Override
     public void onNaviMapMode(int isLock) {
-
     }
 
     @Override
@@ -200,12 +181,10 @@ public class BaseActivity extends Activity implements AMapNaviListener, AMapNavi
 
     @Override
     public void onNaviTurnClick() {
-
     }
 
     @Override
     public void onNextRoadClick() {
-
     }
 
 
@@ -216,10 +195,12 @@ public class BaseActivity extends Activity implements AMapNaviListener, AMapNavi
     @Deprecated
     @Override
     public void onNaviInfoUpdated(AMapNaviInfo naviInfo) {
+
     }
 
     @Override
     public void onNaviInfoUpdate(NaviInfo naviinfo) {
+
     }
 
     @Override
@@ -229,7 +210,6 @@ public class BaseActivity extends Activity implements AMapNaviListener, AMapNavi
 
     @Override
     public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo aMapNaviTrafficFacilityInfo) {
-
     }
 
     @Override
