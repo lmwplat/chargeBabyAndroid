@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="在建交流电桩"
+            android:text="已建交流电桩"
             android:layout_marginLeft="5dp"
             android:textStyle="bold"
             android:textColor="@color/abc_secondary_text_material_light"
@@ -37,7 +37,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="已建交流电桩"
+            android:text="在建交流电桩"
             android:layout_marginLeft="5dp"
             android:textStyle="bold"
             android:textColor="@color/abc_secondary_text_material_light"
@@ -65,7 +65,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="在建直流电桩"
+            android:text="已建直流电桩"
             android:layout_marginLeft="5dp"
             android:textStyle="bold"
             android:textColor="@color/abc_secondary_text_material_light"
@@ -83,7 +83,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="已建直流电桩"
+            android:text="在建直流电桩"
             android:layout_marginLeft="5dp"
             android:textStyle="bold"
             android:textColor="@color/abc_secondary_text_material_light"

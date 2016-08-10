@@ -306,13 +306,18 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
-      //  Bundle bundle = (Bundle) marker.getObject();
         BDMapData data = (BDMapData) marker.getObject();
         String popName = data.getName();
         String popFeeStandard = data.getFeeStandard();
         String popAddress = data.getAddress();
         Double popDistance = data.getDistance();
 
+        if (myLatitude == null || myLongitude == null){
+            return false;
+        }
+
+        data.setMyLatitude(myLatitude);
+        data.setMyLongitude(myLongitude);
 
         Log.e(TAG, "点击了覆盖物");
         //实例化SelectPicPopupWindow
@@ -416,19 +421,17 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
 
 
                 TextView tv_pop_name = (TextView) menuWindow.getContentView().findViewById(R.id.pop_name);
-                tv_pop_name.setText(item.getName());
+                tv_pop_name.setText(item.getName()!= null ? item.getName() : "");
                 TextView tv_price = (TextView) menuWindow.getContentView().findViewById(R.id.pop_price);
-                tv_price.setText(item.getFeeStandard());
+                tv_price.setText(item.getFeeStandard()!= null ? item.getFeeStandard() : "");
                 TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_address);
-                tv_address.setText(item.getAddress());
+                tv_address.setText(item.getAddress()!= null ? item.getAddress() : "");
+                int ac = (item.getAcBuilded()!= null ? item.getAcBuilded() : 0) + (item.getAcBuilding()!= null ? item.getAcBuilding() : 0);
                 TextView tv_pop_main_detail_ac_builded = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_ac_builded);
-                tv_pop_main_detail_ac_builded.setText(item.getAcBuilded());
-                TextView tv_pop_main_detail_ac_building = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_ac_building);
-                tv_pop_main_detail_ac_building.setText(item.getAcBuilding());
+                tv_pop_main_detail_ac_builded.setText(ac != 0 ? String.valueOf(ac) : "");
+                int dc = (item.getDcBuilded()!= null ? item.getDcBuilded() : 0) + (item.getDcBuilding()!= null ? item.getDcBuilding() : 0);
                 TextView tv_pop_main_detail_dc_builded = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_dc_builded);
-                tv_pop_main_detail_dc_builded.setText(item.getDcBuilded());
-                TextView tv_pop_main_detail_dc_building = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_dc_building);
-                tv_pop_main_detail_dc_building.setText(item.getDcBuilding());
+                tv_pop_main_detail_dc_builded.setText(dc != 0 ? String.valueOf(dc) : "");
                 break;
         }
     }

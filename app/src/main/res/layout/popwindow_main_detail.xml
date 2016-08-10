@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="在建交流电桩"
+            android:text="直流（个数）"
             android:layout_marginLeft="5dp"
             android:textStyle="bold"
             android:textColor="@color/abc_secondary_text_material_light"
@@ -25,7 +25,6 @@
             android:id="@+id/tv_pop_main_detail_ac_builded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
             android:layout_marginLeft="5dp"
             android:textStyle="bold"
             android:textColor="@android:color/holo_blue_light"
@@ -35,69 +34,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="已建交流电桩"
+            android:text="交流（个数）"
             android:layout_marginLeft="5dp"
             android:textStyle="bold"
             android:textColor="@color/abc_secondary_text_material_light"
             android:textSize="@dimen/text_size_detail_address"
             />
-        <TextView
-            android:id="@+id/tv_pop_main_detail_ac_building"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:layout_marginLeft="5dp"
-            android:textStyle="bold"
-            android:textColor="@android:color/holo_blue_light"
-            android:textSize="@dimen/text_size_detail_address"
-            android:layout_weight="1"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="@dimen/normal_space" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="在建直流电桩"
-            android:layout_marginLeft="5dp"
-            android:textStyle="bold"
-            android:textColor="@color/abc_secondary_text_material_light"
-            android:textSize="@dimen/text_size_detail_address" />
         <TextView
             android:id="@+id/tv_pop_main_detail_dc_builded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:layout_marginLeft="5dp"
-            android:textStyle="bold"
-            android:textColor="@android:color/holo_blue_light"
-            android:textSize="@dimen/text_size_detail_address"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="已建直流电桩"
-            android:layout_marginLeft="5dp"
-            android:textStyle="bold"
-            android:textColor="@color/abc_secondary_text_material_light"
-            android:textSize="@dimen/text_size_detail_address"
-            />
-        <TextView
-            android:id="@+id/tv_pop_main_detail_dc_building"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
             android:layout_marginLeft="5dp"
             android:textStyle="bold"
             android:textColor="@android:color/holo_blue_light"
             android:textSize="@dimen/text_size_detail_address"
             android:layout_weight="1"/>
     </LinearLayout>
+
 
     <View
         android:layout_width="match_parent"

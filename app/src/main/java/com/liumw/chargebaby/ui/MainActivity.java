@@ -60,9 +60,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //配置bugly
-        CrashReport.initCrashReport(getApplicationContext());
-
         setContentView(R.layout.activity_main);
         x.view().inject(this);
         //首次执行导入.db文件

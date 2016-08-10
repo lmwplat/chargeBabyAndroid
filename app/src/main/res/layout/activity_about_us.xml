@@ -48,7 +48,37 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="8dp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="left"
+                    android:padding="@dimen/normal_space"
+                    android:textColor="@color/black"
+                    android:text="“桩宝宝”是由广州市节能协会为广大电动汽车用户量身定制的充电桩信息平台，提供最佳的充电和用车服务体验。"
+                    android:textSize="@dimen/text_size_big" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="left"
+                    android:padding="@dimen/normal_space"
+                    android:textColor="@color/black"
+                    android:text="联系电话：020-83344043"
+                    android:textSize="@dimen/text_size_big" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="left"
+                    android:padding="@dimen/normal_space"
+                    android:textColor="@color/black"
+                    android:text="邮箱：gzeca40143@163.com"
+                    android:textSize="@dimen/text_size_big" />
 
             </LinearLayout>
         </com.liumw.chargebaby.myviews.VerticalScrollView>
@@ -58,5 +88,8 @@
             android:layout_width="match_parent"
             android:layout_height="8dp"
             android:background="@mipmap/title_shadow" />
+
+
+
     </FrameLayout>
 </LinearLayout>

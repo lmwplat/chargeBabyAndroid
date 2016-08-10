@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.liumw.chargebaby.ui.WelcomeActivity">
+
+        <LinearLayout
+            android:id="@+id/ll_welcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/normal_space"
+            android:weightSum="1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="324dp"
+                android:gravity="center"
+                android:paddingTop="100dp"
+                android:src="@mipmap/logo_chargebaby"
+                android:layout_weight="0.21" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/normal_space"
+            android:textColor="@color/red"
+            android:layout_below="@id/ll_welcome"
+            android:text="充电，上桩宝宝"
+            android:textSize="@dimen/text_size_big" />
+
+</RelativeLayout>
