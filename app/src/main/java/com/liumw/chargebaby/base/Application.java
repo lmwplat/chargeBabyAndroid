@@ -21,6 +21,10 @@ public class Application extends android.app.Application {
     public static final String ACTION_FEEDBACK_CONFIRM = "feedbackController/feedbackConfirm";
     /**APK版本检测*/
     public static final String ACTION_APK_CHECK = "apkVersion/checkApkVersion";
+    /**用户添加收藏*/
+    public static final String ACTION_ADD_FAVORITE = "favorite/addFavorite";
+    /**用户取消收藏*/
+    public static final String ACTION_REMOVE_FAVORITE = "favorite/removeFavorite";
 
 
     /**SharedPreferences 存储的文件名*/
