@@ -24,7 +24,7 @@
                 android:id="@+id/tv_pop_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/silverGray"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_pop_address" />
         </LinearLayout>
     </LinearLayout>

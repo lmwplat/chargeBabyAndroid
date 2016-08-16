@@ -29,5 +29,12 @@ public class ChargeConstants {
     /**范围*/
     public static Double DISTANCE = 10000.0;
     /***********/
+
+
+    /**分享变量*/
+    /**分享url*/
+    public static String SHARE_URL = "http://120.76.194.88:8070/download/download.html";
+    public static String SHARE_TEXT = "桩宝宝下载页面";
+    /***********/
 }
 

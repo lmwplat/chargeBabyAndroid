@@ -219,37 +219,6 @@ public class IntentUtils {
 		} catch (Throwable throwable) {
 			throwable.printStackTrace();
 		}
-       /* x.http().postSync(params, new Callback.CommonCallback<String>() {
-
-            @Override
-            public void onSuccess(String result) {
-                Log.e(TAG, "onSuccess result<<" + result);
-                json = JSON.parseObject(result, Json.class);
-
-				String str = JSON.toJSONString(json.getObj());
-
-                apkInfo = JSON.parseObject(str, ApkInfo.class);;
-				Log.i(TAG, "json:" + result);
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                //Toast.makeText(LoginActivity.this, username + "登录失败", Toast.LENGTH_LONG).show();
-                Log.e(TAG, "onError" );
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-                Log.e(TAG, "onCancelled" );
-            }
-
-            @Override
-            public void onFinished() {
-                Log.e(TAG, "onFinished" );
-                //progressDialog.cancel();
-            }
-        });*/
 
         return apkInfo;
     }

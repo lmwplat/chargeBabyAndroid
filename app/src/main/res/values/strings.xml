@@ -46,6 +46,13 @@
     <string name="check_detail">详细情况</string>
     <string name="charge_detail">充电点详情</string>
 
+    <!--String for favorite-->
+    <string name="title_activity_my_favorite">我的收藏</string>
+
+    <!--String for collect-->
+    <string name="title_activity_my_collect">桩点采集</string>
+    <string name="my_collect_confirm">提交</string>
+    <string name="my_collect_content">请输入桩点信息</string>
 
     <!--语音-->
     <string name="app_id">输入您讯飞的appid</string>
@@ -62,4 +69,7 @@
     <string name="preference_title_tts_pitch">语调</string>
     <string name="preference_default_tts_pitch">50</string>
     <string name="intell_bd_title">智能播报</string>
+
+    <string name="fragment_one">详情</string>
+    <string name="fragment_two">点评</string>
 </resources>

@@ -21,6 +21,7 @@ import com.liumw.chargebaby.base.ChargeConstants;
 import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Json;
+import com.liumw.chargebaby.vo.UserInfo;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -42,13 +43,12 @@ public class FeedBackActivity extends AppCompatActivity {
     EditText feedback_content;
     @ViewInject(R.id.feedback_confirm)
     Button bt_feedback_confirm;
-    private User user;
     private Json json;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
-        Log.e(TAG, "FeedBackActivity.class :: onCreate()");
+        Log.i(TAG, "FeedBackActivity.class :: onCreate()");
 
         feedback_content.addTextChangedListener(new TextWatcher() {
 
@@ -100,10 +100,10 @@ public class FeedBackActivity extends AppCompatActivity {
      * @param content
      */
     private void feedbackConfirm(String content) {
-        user = LoginInfoUtils.getLoginInfo(FeedBackActivity.this);
+        UserInfo userInfo = LoginInfoUtils.getLoginInfo(FeedBackActivity.this);
         String username =null;
-        if (user != null){
-            username = user.getUsername();
+        if (userInfo != null){
+            username = userInfo.getUsername();
         }
         String requestUrl = Application.SERVER + Application.ACTION_FEEDBACK_CONFIRM;
         final ProgressDialog progressDialog = new ProgressDialog(FeedBackActivity.this);

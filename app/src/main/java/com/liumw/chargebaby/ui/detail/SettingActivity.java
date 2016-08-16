@@ -19,6 +19,7 @@ import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.ui.navi.CustomTrafficBarViewActivity;
 import com.liumw.chargebaby.utils.IntentUtils;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
+import com.liumw.chargebaby.vo.UserInfo;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -56,8 +57,8 @@ public class SettingActivity extends AppCompatActivity {
         x.view().inject(this);
         String versionName = IntentUtils.getCurrentVersionName(this);
         setting_version.setText(versionName);
-        user = LoginInfoUtils.getLoginInfo(this);
-        if (user == null){
+        UserInfo userInfo = LoginInfoUtils.getLoginInfo(this);
+        if (userInfo == null){
             ll_setting_logout.setVisibility(View.GONE);
         }else{
             ll_setting_logout.setVisibility(View.VISIBLE);
@@ -95,11 +96,8 @@ public class SettingActivity extends AppCompatActivity {
      */
     private void logout() {
         //未登录，将fragment_my_info 置为gone
-        /*ll_fg_my_login.setVisibility(View.VISIBLE);
-        ll_fg_my_info.setVisibility(View.GONE);*/
         tv_setting_logout.setVisibility(View.GONE);
         LoginInfoUtils.removeLoginInfo(SettingActivity.this);
-     //   Log.e(TAG, "登出清除登录信息 sp" + LoginInfoUtils.getLoginInfo(SettingActivity.this).toString());
     }
 
 }

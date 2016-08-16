@@ -1,6 +1,5 @@
 package com.liumw.chargebaby.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,23 +11,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-import com.google.gson.Gson;
 import com.liumw.chargebaby.R;
-import com.liumw.chargebaby.base.Application;
 import com.liumw.chargebaby.db.DBManager;
 import com.liumw.chargebaby.entity.ApkInfo;
-import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.service.UpdateService;
 import com.liumw.chargebaby.ui.fragment.HomeFragment;
 import com.liumw.chargebaby.ui.fragment.MyFragment;
-import com.liumw.chargebaby.ui.fragment.TestFragment;
 import com.liumw.chargebaby.utils.IntentUtils;
-import com.liumw.chargebaby.vo.Json;
-import com.tencent.bugly.crashreport.CrashReport;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
@@ -48,7 +38,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
 
     private FragmentManager fragmentManager;//管理fragment
     private HomeFragment home;
-    private TestFragment test;
     private MyFragment my;
     private long exitTime = 0;//两次按返回退出
 
@@ -133,12 +122,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
                 }else{
                     beginTransaction.show(home);
                 }
-                /*if (test == null) {
-                    test = new TestFragment();
-                    beginTransaction.add(R.id.main_content, test);
-                } else {
-                    beginTransaction.show(test);
-                }*/
                 break;
             case 1:
                 if (my == null) {
@@ -156,8 +139,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     }
 
     private void hideFragments(FragmentTransaction transaction) {
-        if (test != null)
-            transaction.hide(test);
         if (my != null)
             transaction.hide(my);
     }

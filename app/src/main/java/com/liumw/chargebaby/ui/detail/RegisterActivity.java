@@ -24,6 +24,7 @@ import com.liumw.chargebaby.base.ChargeConstants;
 import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Json;
+import com.liumw.chargebaby.vo.UserInfo;
 
 import org.xutils.common.Callback;
 import org.xutils.common.util.MD5;
@@ -54,7 +55,7 @@ public class RegisterActivity extends Activity {
     private String username;
     private String password;
     private String password2;
-    private User user;
+//    private User user;
     private Json json;
 
     @Override
@@ -128,7 +129,7 @@ public class RegisterActivity extends Activity {
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.e(username, "onSuccess result<<" + result);
+                Log.i(username, "onSuccess result<<" + result);
                 json = JSON.parseObject(result, Json.class);//result为请求后返回的JSON数据,可以直接使用XUtils获得,NewsData.class为一个bean.如以下数据：
                 if (!json.isSuccess()){
 
@@ -137,12 +138,13 @@ public class RegisterActivity extends Activity {
                 }else{
                     //将登录信息，存入sharedPreference
                     LoginInfoUtils.setLoginInfo(RegisterActivity.this, JSON.toJSONString(json.getObj()));
+                    UserInfo userInfo = LoginInfoUtils.getLoginInfo(RegisterActivity.this);
 
                     Toast.makeText(RegisterActivity.this, username + "注册成功", Toast.LENGTH_LONG).show();
                     progressDialog.cancel();
                     // 跳转到登录页面
                     Intent intent=new Intent();
-                    intent.putExtra("username", username);
+                    intent.putExtra("userInfo", userInfo);
                     setResult(ChargeConstants.REGISTER_SUCCESS_RESULT_CODE, intent);
 
                     finish();
@@ -189,7 +191,6 @@ public class RegisterActivity extends Activity {
             Toast.makeText(this, "密码长度不足6位", Toast.LENGTH_SHORT).show();
             return false;
         }
-
         return true;
     }
 

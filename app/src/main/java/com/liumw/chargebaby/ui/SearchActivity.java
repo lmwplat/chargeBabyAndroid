@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
-
+    private static final String TAG = "SearchActivity";
     @ViewInject(R.id.iv_back)
     private ImageView ivBack;
     @ViewInject(R.id.et_search)

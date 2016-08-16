@@ -24,6 +24,7 @@ import com.liumw.chargebaby.base.ChargeConstants;
 import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Json;
+import com.liumw.chargebaby.vo.UserInfo;
 
 import org.xutils.common.Callback;
 import org.xutils.common.util.LogUtil;
@@ -56,7 +57,7 @@ public class LoginActivity extends Activity {
 
 
 
-    User user = null;
+//    User user = null;
     private Json json;
 
     @Override
@@ -142,13 +143,13 @@ public class LoginActivity extends Activity {
                 }else{
                     //将登录信息，存入sharedPreference
                     LoginInfoUtils.setLoginInfo(LoginActivity.this, JSON.toJSONString(json.getObj()) );
-                    User user = LoginInfoUtils.getLoginInfo(LoginActivity.this);
-                    Log.e(TAG, "登录时测试从sp中获取" + user.toString());
+                    UserInfo userInfo = LoginInfoUtils.getLoginInfo(LoginActivity.this);
+                    Log.i(TAG, "登录时测试从sp中获取" + userInfo.toString());
                     Toast.makeText(LoginActivity.this, username + "登录成功", Toast.LENGTH_LONG).show();
                     progressDialog.cancel();
                     // 跳转到登录页面
                     Intent intent=new Intent();
-                    intent.putExtra("username", username);
+                    intent.putExtra("userInfo", userInfo);
                     setResult(ChargeConstants.REGISTER_SUCCESS_RESULT_CODE, intent);
                     finish();
                 }

@@ -27,6 +27,14 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:src="@mipmap/ic_back_u" />
+        <ImageView
+            android:id="@+id/iv_detail_my_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:paddingRight="10dp"
+            android:gravity="center"
+            android:src="@mipmap/my_favorite_write" />
     </FrameLayout>
 
 

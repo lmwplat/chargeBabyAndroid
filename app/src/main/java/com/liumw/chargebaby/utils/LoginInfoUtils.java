@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.liumw.chargebaby.base.Application;
 import com.liumw.chargebaby.base.ChargeConstants;
 import com.liumw.chargebaby.entity.User;
+import com.liumw.chargebaby.vo.UserInfo;
 
 /**
  * Created by Administrator on 2016/7/30 0030.
@@ -20,14 +21,14 @@ public class LoginInfoUtils {
      * @param context
      * @return
      */
-    public static User getLoginInfo(Context context){
+    public static UserInfo getLoginInfo(Context context){
         SharedPreferences sp = context.getSharedPreferences(Application.SP_FILE_NAME, Context.MODE_PRIVATE);
         String str = sp.getString(Application.LONIN_INFO, null);
         if (str == null || str.equals("null")){
             return null;
         }else {
-            User user = JSON.parseObject(str, User.class);
-            return user;
+            UserInfo userInfo = JSON.parseObject(str, UserInfo.class);
+            return userInfo;
         }
     }
 
