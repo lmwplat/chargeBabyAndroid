@@ -1,109 +1,320 @@
 package com.liumw.chargebaby.ui.indicate;
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.liumw.chargebaby.R;
+import com.liumw.chargebaby.base.AppConstants;
+import com.liumw.chargebaby.base.ChargeApplication;
+import com.liumw.chargebaby.base.ChargeConstants;
+import com.liumw.chargebaby.entity.Charge;
+import com.liumw.chargebaby.entity.CommentVo;
+import com.liumw.chargebaby.entity.ReplyVo;
+import com.liumw.chargebaby.myviews.MyListView;
+import com.liumw.chargebaby.ui.detail.LoginActivity;
+import com.liumw.chargebaby.ui.detail.MyFavoriteActivity;
+import com.liumw.chargebaby.utils.DateUtils;
+import com.liumw.chargebaby.utils.ListViewUtils;
+import com.liumw.chargebaby.vo.Json;
+import com.liumw.chargebaby.vo.UserInfo;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DianpinFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DianpinFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@ContentView(R.layout.fragment_dianpin)
 public class DianpinFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "DianpinFragment";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private ChargeApplication app;
+    private UserInfo userInfo;
+    private Context context;
+    private String chargeNo;
+    private Charge charge;
+    Json json = new Json();
 
-    public DianpinFragment() {
-        // Required empty public constructor
-    }
+    @ViewInject(R.id.ll_comment)
+    private View mCommentView;
+    @ViewInject(R.id.my_dianping_recycler_view)
+    private RecyclerView my_dianping_recycler_view;
+    @ViewInject(R.id.review_comment_edit)
+    private EditText review_comment_edit;
+    @ViewInject(R.id.bt_comment_submit)
+    private Button bt_comment_submit;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DianpinFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DianpinFragment newInstance(String param1, String param2) {
-        DianpinFragment fragment = new DianpinFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private CommentAdapter mAdapter;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
+    private List<CommentVo> commentVoList = new ArrayList<CommentVo>();
+    private List<ReplyVo> replyVoList = new ArrayList<ReplyVo>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dianpin, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        // TODO Auto-generated method stub
+        return x.view().inject(this,inflater,container);
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        chargeNo = ((IndicatorFragmentActivity)getActivity()).getChargeNo();
+
+
+        my_dianping_recycler_view.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAdapter = new CommentAdapter();
+        my_dianping_recycler_view.setAdapter(mAdapter);
+
+
+        findAllComment();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    @Event(type = View.OnClickListener.class,value = R.id.bt_comment_submit)
+    private void comentSubmitOnClick(View view){
+        String str = review_comment_edit.getText().toString();
+        addCommet(str);
+
+
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * 添加评论
+     * @param info
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    private void addCommet(String info) {
+        app = (ChargeApplication)getActivity().getApplication();
+        userInfo = app.getUserInfo();
+        String url = AppConstants.SERVER + AppConstants.ACTION_ADD_COMMENT;
+        RequestParams params = new RequestParams(url);
+        params.addBodyParameter("authorId", userInfo.getId().toString());
+        params.addBodyParameter("chargeNo", chargeNo);
+        params.addBodyParameter("info", info);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                json = JSON.parseObject(result, Json.class);
+                if (!json.isSuccess()){
+                    Log.e(TAG, "评价失败" + json.getMsg());
+                }else{
+                    commentVoList.clear();
+                    String jsonString = JSON.toJSONString(json.getObj());
+                    List<CommentVo> all = JSON.parseArray(jsonString, CommentVo.class);
+                    for (CommentVo c : all){
+                        commentVoList.add(c);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(review_comment_edit,InputMethodManager.SHOW_FORCED);
+                    imm.hideSoftInputFromWindow(review_comment_edit.getWindowToken(), 0); //强制隐藏键盘
+                    review_comment_edit.setText(null);
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Log.e(TAG, "onError" );
+            }
+
+            @Override
+            public void onCancelled(Callback.CancelledException cex) {
+
+                Log.e(TAG, "onCancelled" );
+            }
+
+            @Override
+            public void onFinished() {
+                Log.e(TAG, "onFinished" );
+            }
+        });
+
     }
+
+    private void findAllComment(){
+        String url = AppConstants.SERVER + AppConstants.ACTION_FIND_ALL_COMMENT;
+        RequestParams params = new RequestParams(url);
+        params.addBodyParameter("chargeNo", chargeNo);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+        @Override
+        public void onSuccess(String result) {
+            json = JSON.parseObject(result, Json.class);
+            if (!json.isSuccess()){
+                Log.e(TAG, "登录失败" + json.getMsg());
+            }else{
+
+            String jsonString = JSON.toJSONString(json.getObj());
+            List<CommentVo> all = JSON.parseArray(jsonString, CommentVo.class);
+            for (CommentVo c : all){
+                commentVoList.add(c);
+            }
+            mAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            Log.e(TAG, "onError" );
+        }
+
+        @Override
+        public void onCancelled(Callback.CancelledException cex) {
+
+            Log.e(TAG, "onCancelled" );
+        }
+
+        @Override
+        public void onFinished() {
+            Log.e(TAG, "onFinished" );
+        }
+    });
+    }
+
+    public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
+
+        private final int COMMENT_VIEW = 1000;
+        private final int REPLY_VIEW = 1001;
+
+        public CommentAdapter() {
+        }
+
+        @Override
+        public CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new CommentViewHolder(LayoutInflater.from(getActivity()).inflate(R.layout.item_comment, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(final CommentViewHolder holder, int position) {
+
+            CommentVo item = commentVoList.get(position);
+            holder.tvCommentAuthor.setText(item.getAuthor());
+            holder.tvCommentInfo.setText(item.getInfo());
+            holder.tvCommentCreatedAt.setText(DateUtils.formatDateSimple(item.getCreateTime()));
+
+           /* if (item.getReplyVoList().size() > 0){
+                holder.llReplyLayout.setVisibility(View.VISIBLE);
+                ReplyAdapter adapter = new ReplyAdapter(getActivity());
+                holder.lvCommentReply.setAdapter(adapter);
+                ListViewUtils.setListViewHeightBasedOnChildren(holder.lvCommentReply);
+
+            }*/
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return commentVoList.size();
+        }
+
+        class CommentViewHolder extends RecyclerView.ViewHolder {
+
+            ImageView tvCommentPortrait;
+
+            TextView tvCommentAuthor;
+
+            TextView tvCommentInfo;
+
+            TextView tvCommentCreatedAt;
+
+            LinearLayout llReplyLayout;
+
+            MyListView lvCommentReply;
+
+            public CommentViewHolder(View itemView) {
+                super(itemView);
+                tvCommentPortrait = (ImageView) itemView.findViewById(R.id.tv_comment_portrait);
+                tvCommentAuthor = (TextView) itemView.findViewById(R.id.tv_comment_author);
+                tvCommentInfo = (TextView) itemView.findViewById(R.id.tv_comment_info);
+                tvCommentCreatedAt = (TextView) itemView.findViewById(R.id.tv_comment_created_at);
+                llReplyLayout = (LinearLayout) itemView.findViewById(R.id.ll_reply_layout);
+                lvCommentReply = (MyListView) itemView.findViewById(R.id.lv_comment_reply);
+
+
+            }
+        }
+
+        public final class ViewHolder{
+            public TextView tvCommentReplyAuthor;
+            public TextView tvCommentReplyInfo;
+        }
+
+        public class ReplyAdapter extends BaseAdapter {
+
+            private LayoutInflater mInflater;
+
+
+            public ReplyAdapter(Context context){
+                this.mInflater = LayoutInflater.from(context);
+            }
+            @Override
+            public int getCount() {
+                // TODO Auto-generated method stub
+                return replyVoList.size();
+            }
+
+
+            @Override
+            public Object getItem(int arg0) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public long getItemId(int arg0) {
+                // TODO Auto-generated method stub
+                return 0;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+
+                ViewHolder holder = null;
+                if (convertView == null) {
+                    holder=new ViewHolder();
+                    convertView = mInflater.inflate(R.layout.item_comment_reply, null);
+                    holder.tvCommentReplyAuthor = (TextView)convertView.findViewById(R.id.tv_comment_reply_author);
+                    holder.tvCommentReplyInfo = (TextView)convertView.findViewById(R.id.tv_comment_reply_info);
+
+
+                    convertView.setTag(holder);
+
+                }else {
+
+                    holder = (ViewHolder)convertView.getTag();
+                }
+
+
+                holder.tvCommentReplyAuthor.setText(replyVoList.get(position).getAuthor());
+                holder.tvCommentReplyInfo.setText(replyVoList.get(position).getInfo());
+
+                return convertView;
+            }
+
+        }
+    }
+
+
+
+
 }

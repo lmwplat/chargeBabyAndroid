@@ -11,12 +11,8 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -28,13 +24,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.liumw.chargebaby.base.Application;
-import com.liumw.chargebaby.base.ChargeConstants;
+import com.liumw.chargebaby.base.AppConstants;
 import com.liumw.chargebaby.entity.ApkInfo;
-import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.vo.Json;
 
-import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -201,7 +194,7 @@ public class IntentUtils {
      */
     public static  ApkInfo checkApkVersion(int versionNo){
 
-        String requestUrl = Application.SERVER + Application.ACTION_APK_CHECK;
+        String requestUrl = AppConstants.SERVER + AppConstants.ACTION_APK_CHECK;
         RequestParams params = new RequestParams(requestUrl);
         params.addBodyParameter("versionNo", String.valueOf(versionNo));
 		String result = null;

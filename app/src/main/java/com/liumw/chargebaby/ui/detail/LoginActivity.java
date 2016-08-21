@@ -2,9 +2,7 @@ package com.liumw.chargebaby.ui.detail;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,9 +17,8 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.liumw.chargebaby.R;
-import com.liumw.chargebaby.base.Application;
+import com.liumw.chargebaby.base.AppConstants;
 import com.liumw.chargebaby.base.ChargeConstants;
-import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Json;
 import com.liumw.chargebaby.vo.UserInfo;
@@ -126,7 +123,7 @@ public class LoginActivity extends Activity {
      * @param password
      */
     private void login(final String username, String password) {
-        String requestUrl = Application.SERVER + Application.ACTION_LOGIN;
+        String requestUrl = AppConstants.SERVER + AppConstants.ACTION_LOGIN;
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setMessage("请稍候...");
         RequestParams params = new RequestParams(requestUrl);
@@ -144,6 +141,7 @@ public class LoginActivity extends Activity {
                     //将登录信息，存入sharedPreference
                     LoginInfoUtils.setLoginInfo(LoginActivity.this, JSON.toJSONString(json.getObj()) );
                     UserInfo userInfo = LoginInfoUtils.getLoginInfo(LoginActivity.this);
+
                     Log.i(TAG, "登录时测试从sp中获取" + userInfo.toString());
                     Toast.makeText(LoginActivity.this, username + "登录成功", Toast.LENGTH_LONG).show();
                     progressDialog.cancel();

@@ -13,16 +13,7 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.alibaba.fastjson.JSON;
-import com.liumw.chargebaby.base.Application;
-import com.liumw.chargebaby.base.ChargeConstants;
-import com.liumw.chargebaby.entity.ApkInfo;
-import com.liumw.chargebaby.utils.IntentUtils;
-import com.liumw.chargebaby.vo.Json;
-
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
+import com.liumw.chargebaby.base.AppConstants;
 
 public class UpdateService extends Service {
     private static final String TAG = "UpdateService";
@@ -46,7 +37,7 @@ public class UpdateService extends Service {
         //设置下载地址
         DownloadManager.Request down = new DownloadManager.Request(
 
-        Uri.parse(Application.APK_DOWNLOAD_ADDRESS + Application.APK_INSTALL_NAME));
+        Uri.parse(AppConstants.APK_DOWNLOAD_ADDRESS + AppConstants.APK_INSTALL_NAME));
 
         // 设置允许使用的网络类型，这里是移动网络和wifi都可以
         down.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
@@ -60,7 +51,7 @@ public class UpdateService extends Service {
         down.setVisibleInDownloadsUi(true);
 
         // 设置下载后文件存放的位置
-        down.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, Application.APK_INSTALL_NAME);
+        down.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, AppConstants.APK_INSTALL_NAME);
 
         // 将下载请求放入队列
         manager.enqueue(down);

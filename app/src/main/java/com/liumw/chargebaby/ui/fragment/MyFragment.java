@@ -3,7 +3,6 @@ package com.liumw.chargebaby.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liumw.chargebaby.R;
-import com.liumw.chargebaby.base.Application;
 import com.liumw.chargebaby.base.ChargeConstants;
 import com.liumw.chargebaby.ui.detail.LoginActivity;
 import com.liumw.chargebaby.ui.detail.MyCollectActivity;

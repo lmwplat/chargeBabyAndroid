@@ -1,6 +1,5 @@
 package com.liumw.chargebaby.ui.detail;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.liumw.chargebaby.R;
-import com.liumw.chargebaby.base.Application;
-import com.liumw.chargebaby.entity.Charge;
+import com.liumw.chargebaby.ui.indicate.IndicatorFragmentActivity;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Favorite;
 import com.liumw.chargebaby.vo.UserInfo;
@@ -82,7 +79,7 @@ public class MyFavoriteActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(FavoriteViewHolder holder, int position) {
+        public void onBindViewHolder(final FavoriteViewHolder holder, int position) {
             final Favorite item = mList.get(position);
             holder.tvName.setText(item.getName());
             holder.tvArea.setText(item.getArea());
@@ -90,8 +87,10 @@ public class MyFavoriteActivity extends AppCompatActivity {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), ChargeDetailActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), IndicatorFragmentActivity.class);
                     intent.putExtra("chargeNo", item.getChargeNo());
+                    intent.putExtra("name", item.getName());
+                    intent.putExtra("address", item.getAddress());
                     intent.putExtra("isFavorited", true);
 
                     startActivity(intent);

@@ -20,15 +20,50 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.liumw.chargebaby.R;
+import com.liumw.chargebaby.base.ChargeApplication;
+import com.liumw.chargebaby.dao.FavoriteDao;
+import com.liumw.chargebaby.entity.Charge;
+import com.liumw.chargebaby.ui.detail.LoginActivity;
+import com.liumw.chargebaby.utils.LoginInfoUtils;
+import com.liumw.chargebaby.vo.Favorite;
+import com.liumw.chargebaby.vo.UserInfo;
 
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
-@SuppressWarnings("static-access")
-public abstract class IndicatorFragmentActivity extends FragmentActivity implements OnPageChangeListener {
-    private static final String TAG = "DxFragmentActivity";
+@ContentView(R.layout.titled_fragment_tab_activity)
+public class IndicatorFragmentActivity extends FragmentActivity implements OnPageChangeListener  {
+    private static final String TAG = "IndicatorFragmentActivity";
+
+    @ViewInject(R.id.iv_detail_dianping_my_favorite)
+    ImageView iv_detail_dianping_my_favorite;
+    @ViewInject(R.id.tv_charge_detail_name)
+    TextView tv_charge_detail_name;
+    @ViewInject(R.id.tv_charge_detail_address)
+    TextView tv_charge_detail_address;
+
+    private UserInfo userInfo;
+    private String chargeNo;
+    private String name;
+    private String address;
+    private Double distance;
+    private Charge charge;
+    private Boolean isFavorited;
+    private ChargeApplication app;
+
+    public static final int FRAGMENT_DETAIL = 0;
+    public static final int FRAGMENT_DIANPIN = 1;
 
     public static final String EXTRA_TAB = "tab";
     public static final String EXTRA_QUIT = "extra.quit";
@@ -99,8 +134,27 @@ public abstract class IndicatorFragmentActivity extends FragmentActivity impleme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        x.view().inject(this);
+//        setContentView(R.layout.titled_fragment_tab_activity);
 
-        setContentView(getMainViewResId());
+        app = (ChargeApplication)getApplication();
+        userInfo = app.getUserInfo();
+        Intent i =getIntent();
+        chargeNo = i.getStringExtra("chargeNo");
+        distance = i.getDoubleExtra("distance", -1);
+        name = i.getStringExtra("name");
+        address = i.getStringExtra("address");
+        isFavorited = i.getBooleanExtra("isFavorited", false);
+        Log.i(TAG, "chargeNo :" + chargeNo + "distance :" + String.valueOf(distance));
+        //如果已收藏，将收藏点亮
+        if (isFavorited){
+            iv_detail_dianping_my_favorite.setImageResource(R.mipmap.my_favorite_red);
+        }
+        tv_charge_detail_name.setText(name!= null ? name : "");
+        tv_charge_detail_address.setText(address!= null ? address : "");
+
+
+
         initViews();
 
         //设置viewpager内部页面之间的间距
@@ -109,6 +163,98 @@ public abstract class IndicatorFragmentActivity extends FragmentActivity impleme
         mPager.setPageMarginDrawable(R.color.page_viewer_margin_color);
     }
 
+
+    @Event(value={R.id.charge_detail_dianping_back, R.id.iv_detail_dianping_my_favorite},type=View.OnClickListener.class)
+    private void onClick(View view){
+        //必须为private
+        switch (view.getId()) {
+            case R.id.charge_detail_dianping_back:
+                Log.i(TAG, "退出");
+                finish();
+
+                break;
+
+            case R.id.iv_detail_dianping_my_favorite:
+                if (userInfo == null){
+                    //未登录，跳转登录页面
+                    startActivity(new Intent(this, LoginActivity.class));
+                }else{
+                    if (isFavorited){
+                        //已经收藏，取消收藏
+                        // 启动线程执行取消收藏
+                        new Thread(removeFavoriteRun).start();
+                    }else {
+                        //还未收藏，添加收藏
+                        new Thread(addFavoriteRun).start();
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 取消收藏线程
+     */
+    Runnable removeFavoriteRun = new Runnable(){
+
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            List<Favorite> favoriteList = null;
+            try {
+
+                favoriteList = FavoriteDao.removeFavorite(userInfo.getId(), chargeNo);
+                if (favoriteList != null){
+                    userInfo.setFavoriteList(favoriteList);
+                    LoginInfoUtils.setLoginInfo(IndicatorFragmentActivity.this, JSON.toJSONString(userInfo));
+                    iv_detail_dianping_my_favorite.post(new Runnable(){
+
+                        @Override
+                        public void run() {
+                            iv_detail_dianping_my_favorite.setImageResource(R.mipmap.my_favorite_write);
+                            isFavorited = false;
+                            Toast.makeText(x.app(), "取消收藏成功", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+    };
+
+    /**
+     * 添加收藏线程
+     */
+    Runnable addFavoriteRun = new Runnable(){
+
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            List<Favorite> favoriteList = null;
+            try {
+                favoriteList = FavoriteDao.addFavorite(userInfo.getId(), chargeNo);
+                if (favoriteList != null){
+                    userInfo.setFavoriteList(favoriteList);
+                    LoginInfoUtils.setLoginInfo(IndicatorFragmentActivity.this, JSON.toJSONString(userInfo));
+                    iv_detail_dianping_my_favorite.post(new Runnable(){
+
+                        @Override
+                        public void run() {
+                            iv_detail_dianping_my_favorite.setImageResource(R.mipmap.my_favorite_red);
+                            isFavorited = true;
+                            Toast.makeText(x.app(), "收藏成功", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+    };
     @Override
     protected void onDestroy() {
         mTabs.clear();
@@ -208,17 +354,15 @@ public abstract class IndicatorFragmentActivity extends FragmentActivity impleme
     }
 
     /**
-     * 返回layout id
-     * @return layout id
-     */
-    protected int getMainViewResId() {
-        return R.layout.titled_fragment_tab_activity;
-    }
-
-    /**
      * 在这里提供要显示的选项卡数据
      */
-    protected abstract int supplyTabs(List<TabInfo> tabs);
+    protected int supplyTabs(List<TabInfo> tabs) {
+        tabs.add(new TabInfo(FRAGMENT_DETAIL, getString(R.string.fragment_one),
+                DetailFragment.class));
+        tabs.add(new TabInfo(FRAGMENT_DIANPIN, getString(R.string.fragment_two),
+                DianpinFragment.class));
+        return FRAGMENT_DETAIL;
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -333,4 +477,11 @@ public abstract class IndicatorFragmentActivity extends FragmentActivity impleme
 
     }
 
+    public String getChargeNo() {
+        return chargeNo;
+    }
+
+    public void setChargeNo(String chargeNo) {
+        this.chargeNo = chargeNo;
+    }
 }

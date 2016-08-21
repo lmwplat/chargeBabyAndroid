@@ -148,7 +148,10 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         mListener = null;
         int i = 0;
     }
-
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
     @Override
     public void onPause() {
         super.onPause();

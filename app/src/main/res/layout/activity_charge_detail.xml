@@ -40,7 +40,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content" >
 
 
         <com.liumw.chargebaby.myviews.VerticalScrollView
@@ -64,6 +64,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp" />
             </LinearLayout>
+
+
         </com.liumw.chargebaby.myviews.VerticalScrollView>
 
         <!-- title shadow -->
@@ -71,5 +73,10 @@
             android:layout_width="match_parent"
             android:layout_height="8dp"
             android:background="@mipmap/title_shadow" />
+
+
     </FrameLayout>
+
+
+
 </LinearLayout>

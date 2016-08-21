@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.liumw.chargebaby.R;
-import com.liumw.chargebaby.base.Application;
+import com.liumw.chargebaby.base.AppConstants;
 import com.liumw.chargebaby.base.ChargeConstants;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Json;
@@ -117,7 +117,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
      * @param pass
      */
     private void forgetPasswordConfirm(final String user, String pass) {
-        String requestUrl = Application.SERVER + Application.ACTION_CONFIRM;
+        String requestUrl = AppConstants.SERVER + AppConstants.ACTION_CONFIRM;
         final ProgressDialog progressDialog = new ProgressDialog(ForgetPasswordActivity.this);
         progressDialog.setMessage("请稍候...");
         RequestParams params = new RequestParams(requestUrl);

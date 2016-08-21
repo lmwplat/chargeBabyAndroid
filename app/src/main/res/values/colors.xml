@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <drawable name="transparent">#00000000</drawable>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#3f51b5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="normal_orange">#ff6633</color>
@@ -19,7 +19,7 @@
     <color name="normal_orange_btn_unclickable">#f5d0a8</color>
     <color name="normal_orange_btn_pressed">#d25000</color>
 
-    <color name="page_viewer_margin_color">#007800</color>
+    <color name="page_viewer_margin_color">#696969</color>
     <color name="common_white">#ffffff</color>
     <color name="common_white_shadow">#414141</color>
     <color name="common_white_disabled">#e7e7e7</color>
@@ -40,4 +40,6 @@
     <color name="common_blue">#4b8bbd</color>
     <color name="tab_indicator_text_selected">#4b8bbd</color>
     <color name="tab_indicator_text_unselected">#000000</color>
+
+    <color name="colorCommentLayoutBg">#999999</color>
 </resources>

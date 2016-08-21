@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.liumw.chargebaby.R;
-import com.liumw.chargebaby.base.Application;
+import com.liumw.chargebaby.base.AppConstants;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Json;
 import com.liumw.chargebaby.vo.UserInfo;
@@ -49,7 +49,7 @@ public class MyCollectActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-                if (et_my_collect_content.getText().toString().length() >= 10) {
+                if (et_my_collect_content.getText().toString().length() >= 1) {
                     bt_my_collect_confirm.setEnabled(true);
                     Log.e(TAG, "collect-set-true");
                 } else {
@@ -101,7 +101,7 @@ public class MyCollectActivity extends AppCompatActivity {
         if (userInfo != null){
             username = userInfo.getUsername();
         }
-        String requestUrl = Application.SERVER + Application.ACTION_ADD_COLLECT;
+        String requestUrl = AppConstants.SERVER + AppConstants.ACTION_ADD_COLLECT;
         final ProgressDialog progressDialog = new ProgressDialog(MyCollectActivity.this);
         progressDialog.setMessage("请稍候...");
         RequestParams params = new RequestParams(requestUrl);

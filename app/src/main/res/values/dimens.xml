@@ -23,7 +23,7 @@
     <!-- 高度 -->
     <dimen name="normal_input_height">40dp</dimen>
 
-    <dimen name="page_margin_width">12dp</dimen>
+    <dimen name="page_margin_width">1dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <!-- For buttons -->
     <dimen name="common_text_size_large">18dp</dimen>

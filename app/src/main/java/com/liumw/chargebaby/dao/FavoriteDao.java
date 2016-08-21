@@ -1,12 +1,10 @@
 package com.liumw.chargebaby.dao;
 
 import com.alibaba.fastjson.JSON;
-import com.liumw.chargebaby.base.Application;
-import com.liumw.chargebaby.utils.XutilsHttpUtils;
+import com.liumw.chargebaby.base.AppConstants;
 import com.liumw.chargebaby.vo.Favorite;
 import com.liumw.chargebaby.vo.Json;
 
-import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -39,7 +37,7 @@ public class FavoriteDao {
      */
     public static List<Favorite> addFavorite(Long userId, String chargeNo) throws Throwable {
         Json json = new Json();
-        String url = Application.SERVER + Application.ACTION_ADD_FAVORITE;
+        String url = AppConstants.SERVER + AppConstants.ACTION_ADD_FAVORITE;
         RequestParams params = new RequestParams(url);
         params.addBodyParameter("userId", String.valueOf(userId));
         params.addBodyParameter("chargeNo", chargeNo);
@@ -62,7 +60,7 @@ public class FavoriteDao {
      */
     public static List<Favorite> removeFavorite(Long userId, String chargeNo) throws Throwable {
         Json json = new Json();
-        String url = Application.SERVER + Application.ACTION_REMOVE_FAVORITE;
+        String url = AppConstants.SERVER + AppConstants.ACTION_REMOVE_FAVORITE;
         RequestParams params = new RequestParams(url);
         params.addBodyParameter("userId", String.valueOf(userId));
         params.addBodyParameter("chargeNo", chargeNo);

@@ -1,7 +1,6 @@
 package com.liumw.chargebaby.ui.detail;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,9 +10,13 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.liumw.chargebaby.R;
+import com.liumw.chargebaby.base.ChargeApplication;
 import com.liumw.chargebaby.dao.FavoriteDao;
 import com.liumw.chargebaby.db.DBManager;
 import com.liumw.chargebaby.entity.Charge;
+import com.liumw.chargebaby.ui.indicate.DetailFragment;
+import com.liumw.chargebaby.ui.indicate.DianpinFragment;
+import com.liumw.chargebaby.ui.indicate.IndicatorFragmentActivity;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Favorite;
 import com.liumw.chargebaby.vo.UserInfo;
@@ -26,18 +29,16 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.List;
+public class ChargeDetailDianpinActivity extends IndicatorFragmentActivity {
+    private static final String TAG = "ChargeDetailDianpinActivity";
 
-@ContentView(R.layout.activity_charge_detail)
-public class ChargeDetailActivity extends AppCompatActivity {
-    private static final String TAG = "ChargeDetailActivity";
+    public static final int FRAGMENT_DETAIL = 0;
+    public static final int FRAGMENT_DIANPIN = 1;
 
-    private String chargeNo;
-    private Double distance;
-    private Charge charge;
-    private Boolean isFavorited;
-
-    @ViewInject(R.id.charge_detail_back)
-    ImageView charge_detail_back;
+    @ViewInject(R.id.charge_detail_dianping_back)
+    ImageView charge_detail_dianping_back;
+    @ViewInject(R.id.iv_detail_dianping_my_favorite)
+    ImageView iv_detail_dianping_my_favorite;
     @ViewInject(R.id.tv_charge_detail_name)
     TextView tv_charge_detail_name;
     @ViewInject(R.id.tv_charge_detail_address)
@@ -62,40 +63,41 @@ public class ChargeDetailActivity extends AppCompatActivity {
     TextView tv_charge_detail_detail;
     @ViewInject(R.id.tv_charge_detail_depart)
     TextView tv_charge_detail_depart;
-    @ViewInject(R.id.iv_detail_my_favorite)
-    ImageView iv_detail_my_favorite;
-
-    private UserInfo userInfo;
-
-
 
     //数据库处理
     DbManager.DaoConfig daoConfig= DBManager.getDaoConfig();
     DbManager db = x.getDb(daoConfig);
 
+    private UserInfo userInfo;
+    private String chargeNo;
+    private Double distance;
+    private Charge charge;
+    private Boolean isFavorited;
+    private ChargeApplication app;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        x.view().inject(this);
-        userInfo = LoginInfoUtils.getLoginInfo(this);
+        app = (ChargeApplication)getApplication();
+        userInfo = app.getUserInfo();
         Intent i =getIntent();
         chargeNo = i.getStringExtra("chargeNo");
         distance = i.getDoubleExtra("distance", -1);
         isFavorited = i.getBooleanExtra("isFavorited", false);
         Log.i(TAG, "chargeNo :" + chargeNo + "distance :" + String.valueOf(distance));
-
         //如果已收藏，将收藏点亮
         if (isFavorited){
-            iv_detail_my_favorite.setImageResource(R.mipmap.my_favorite_red);
+            iv_detail_dianping_my_favorite.setImageResource(R.mipmap.my_favorite_red);
         }
 
         try {
             charge = db.selector(Charge.class).where("charge_no","=",chargeNo).findFirst();
             if(charge != null){
                 Log.i(TAG, "charge :" + charge.toString());
-                tv_charge_detail_name.setText(charge.getName()!= null ? charge.getName() : "");
-                tv_charge_detail_address.setText(charge.getAddress()!= null ? charge.getAddress() : "");
-                tv_charge_detail_ac_builded.setText(charge.getAcBuilded() != null ? String.valueOf(charge.getAcBuilded()) : "");
+                //tv_charge_detail_name.setText(charge.getName()!= null ? charge.getName() : "");
+               // tv_charge_detail_address.setText(charge.getAddress()!= null ? charge.getAddress() : "");
+                /*tv_charge_detail_ac_builded.setText(charge.getAcBuilded() != null ? String.valueOf(charge.getAcBuilded()) : "");
                 tv_charge_detail_ac_building.setText(charge.getAcBuilding() != null ? String.valueOf(charge.getAcBuilding()) : "");
                 tv_charge_detail_dc_builded.setText(charge.getDcBuilded() != null ? String.valueOf(charge.getDcBuilded()) : "");
                 tv_charge_detail_dc_building.setText(charge.getDcBuilding() != null ? String.valueOf(charge.getDcBuilding()) : "");
@@ -104,7 +106,7 @@ public class ChargeDetailActivity extends AppCompatActivity {
                 tv_charge_detail_standard_name.setText(charge.getStandardName()!= null ? charge.getStandardName() : "");
                 tv_charge_detail_fee_standard.setText(charge.getFeeStandard()!= null ? charge.getFeeStandard() : "");
                 tv_charge_detail_detail.setText(charge.getDetail()!= null ? charge.getDetail() : "");
-                tv_charge_detail_depart.setText(charge.getDepart()!= null ? charge.getDepart() : "");
+                tv_charge_detail_depart.setText(charge.getDepart()!= null ? charge.getDepart() : "");*/
 
             }
         } catch (DbException e) {
@@ -113,19 +115,26 @@ public class ChargeDetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected int supplyTabs(List<TabInfo> tabs) {
+        tabs.add(new TabInfo(FRAGMENT_DETAIL, getString(R.string.fragment_one),
+                DetailFragment.class));
+        tabs.add(new TabInfo(FRAGMENT_DIANPIN, getString(R.string.fragment_two),
+                DianpinFragment.class));
+        return FRAGMENT_DETAIL;
+    }
 
-
-    @Event(value={R.id.charge_detail_back, R.id.iv_detail_my_favorite},type=View.OnClickListener.class)
+    @Event(value={R.id.charge_detail_dianping_back, R.id.iv_detail_dianping_my_favorite},type=View.OnClickListener.class)
     private void onClick(View view){
         //必须为private
         switch (view.getId()) {
-            case R.id.charge_detail_back:
+            case R.id.charge_detail_dianping_back:
                 Log.i(TAG, "退出");
                 finish();
 
                 break;
 
-            case R.id.iv_detail_my_favorite:
+            case R.id.iv_detail_dianping_my_favorite:
                 if (userInfo == null){
                     //未登录，跳转登录页面
                     startActivity(new Intent(this, LoginActivity.class));
@@ -145,6 +154,7 @@ public class ChargeDetailActivity extends AppCompatActivity {
                 break;
         }
     }
+
     /**
      * 取消收藏线程
      */
@@ -159,12 +169,12 @@ public class ChargeDetailActivity extends AppCompatActivity {
                 favoriteList = FavoriteDao.removeFavorite(userInfo.getId(), chargeNo);
                 if (favoriteList != null){
                     userInfo.setFavoriteList(favoriteList);
-                    LoginInfoUtils.setLoginInfo(ChargeDetailActivity.this, JSON.toJSONString(userInfo));
-                    iv_detail_my_favorite.post(new Runnable(){
+                    LoginInfoUtils.setLoginInfo(ChargeDetailDianpinActivity.this, JSON.toJSONString(userInfo));
+                    iv_detail_dianping_my_favorite.post(new Runnable(){
 
                         @Override
                         public void run() {
-                            iv_detail_my_favorite.setImageResource(R.mipmap.my_favorite_write);
+                            iv_detail_dianping_my_favorite.setImageResource(R.mipmap.my_favorite_write);
                             isFavorited = false;
                             Toast.makeText(x.app(), "取消收藏成功", Toast.LENGTH_LONG).show();
                         }
@@ -189,12 +199,12 @@ public class ChargeDetailActivity extends AppCompatActivity {
                 favoriteList = FavoriteDao.addFavorite(userInfo.getId(), chargeNo);
                 if (favoriteList != null){
                     userInfo.setFavoriteList(favoriteList);
-                    LoginInfoUtils.setLoginInfo(ChargeDetailActivity.this, JSON.toJSONString(userInfo));
-                    iv_detail_my_favorite.post(new Runnable(){
+                    LoginInfoUtils.setLoginInfo(ChargeDetailDianpinActivity.this, JSON.toJSONString(userInfo));
+                    iv_detail_dianping_my_favorite.post(new Runnable(){
 
                         @Override
                         public void run() {
-                            iv_detail_my_favorite.setImageResource(R.mipmap.my_favorite_red);
+                            iv_detail_dianping_my_favorite.setImageResource(R.mipmap.my_favorite_red);
                             isFavorited = true;
                             Toast.makeText(x.app(), "收藏成功", Toast.LENGTH_LONG).show();
                         }
@@ -205,5 +215,4 @@ public class ChargeDetailActivity extends AppCompatActivity {
             }
         }
     };
-
 }

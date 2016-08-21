@@ -2,9 +2,7 @@ package com.liumw.chargebaby.ui.detail;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -17,11 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.google.gson.Gson;
 import com.liumw.chargebaby.R;
-import com.liumw.chargebaby.base.Application;
+import com.liumw.chargebaby.base.AppConstants;
 import com.liumw.chargebaby.base.ChargeConstants;
-import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Json;
 import com.liumw.chargebaby.vo.UserInfo;
@@ -120,7 +116,7 @@ public class RegisterActivity extends Activity {
     }
 
     private void register(final String username, String password) {
-        String requestUrl = Application.SERVER + Application.ACTION_REGIST;
+        String requestUrl = AppConstants.SERVER + AppConstants.ACTION_REGIST;
         final ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
         progressDialog.setMessage("请稍候...");
         RequestParams params = new RequestParams(requestUrl);

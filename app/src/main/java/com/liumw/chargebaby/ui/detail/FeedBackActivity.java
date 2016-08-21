@@ -1,7 +1,6 @@
 package com.liumw.chargebaby.ui.detail;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,14 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.liumw.chargebaby.R;
-import com.liumw.chargebaby.base.Application;
-import com.liumw.chargebaby.base.ChargeConstants;
-import com.liumw.chargebaby.entity.User;
+import com.liumw.chargebaby.base.AppConstants;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Json;
 import com.liumw.chargebaby.vo.UserInfo;
@@ -105,7 +101,7 @@ public class FeedBackActivity extends AppCompatActivity {
         if (userInfo != null){
             username = userInfo.getUsername();
         }
-        String requestUrl = Application.SERVER + Application.ACTION_FEEDBACK_CONFIRM;
+        String requestUrl = AppConstants.SERVER + AppConstants.ACTION_FEEDBACK_CONFIRM;
         final ProgressDialog progressDialog = new ProgressDialog(FeedBackActivity.this);
         progressDialog.setMessage("请稍候...");
         RequestParams params = new RequestParams(requestUrl);

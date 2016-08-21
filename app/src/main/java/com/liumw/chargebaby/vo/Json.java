@@ -1,5 +1,7 @@
 package com.liumw.chargebaby.vo;
 
+import java.io.Serializable;
+
 /**
  *  JSON模型
  *
@@ -7,7 +9,7 @@ package com.liumw.chargebaby.vo;
  * Created by Administrator on 2016/7/30 0030.
  * Email:   1879358765@qq.com
  */
-public class Json {
+public class Json implements Serializable{
     /**返回码*/
     private String result_code;
     /**是否成功*/

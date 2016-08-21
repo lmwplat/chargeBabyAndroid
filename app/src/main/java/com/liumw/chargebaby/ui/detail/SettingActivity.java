@@ -1,8 +1,6 @@
 package com.liumw.chargebaby.ui.detail;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,12 +9,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.liumw.chargebaby.R;
-import com.liumw.chargebaby.base.Application;
+import com.liumw.chargebaby.base.ChargeApplication;
 import com.liumw.chargebaby.base.ChargeConstants;
 import com.liumw.chargebaby.entity.User;
-import com.liumw.chargebaby.ui.navi.CustomTrafficBarViewActivity;
 import com.liumw.chargebaby.utils.IntentUtils;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.UserInfo;
@@ -48,7 +44,7 @@ public class SettingActivity extends AppCompatActivity {
     TextView setting_version;
 
 
-
+    private ChargeApplication app;
     private User user;
 
     @Override
@@ -98,6 +94,10 @@ public class SettingActivity extends AppCompatActivity {
         //未登录，将fragment_my_info 置为gone
         tv_setting_logout.setVisibility(View.GONE);
         LoginInfoUtils.removeLoginInfo(SettingActivity.this);
+
+        app = (ChargeApplication)getApplication();
+        app.setUserInfo(null);
+        app.setLoginName(null);
     }
 
 }
