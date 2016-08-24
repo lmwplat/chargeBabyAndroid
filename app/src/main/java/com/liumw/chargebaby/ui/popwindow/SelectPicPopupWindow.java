@@ -24,6 +24,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.liumw.chargebaby.R;
+import com.liumw.chargebaby.base.ChargeApplication;
 import com.liumw.chargebaby.dao.FavoriteDao;
 import com.liumw.chargebaby.entity.BDMapData;
 import com.liumw.chargebaby.ui.detail.ChargeDetailActivity;
@@ -50,7 +51,7 @@ public class SelectPicPopupWindow extends PopupWindow  {
 	ImageView iv_my_favorite;
 	final BDMapData bdMapData;
 	UserInfo userInfo;
-
+	private ChargeApplication app;
 
 	public SelectPicPopupWindow(final Activity context, final Object object) {
 		super(context);
@@ -84,10 +85,6 @@ public class SelectPicPopupWindow extends PopupWindow  {
 		this.setBackgroundDrawable(dw);
 		//mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
 
-		//从共享参数获取数据
-		/*sp = context.getSharedPreferences(AppConstants.SP_FILE_NAME, Context.MODE_PRIVATE);
-		String str = sp.getString(AppConstants.LONIN_INFO, null);
-		Log.e(TAG, "从sp中获取" + str);*/
 		userInfo = LoginInfoUtils.getLoginInfo(context);
 		if (userInfo == null){
 			//未登录，iv_my_favorite 置为gone
@@ -139,6 +136,8 @@ public class SelectPicPopupWindow extends PopupWindow  {
 				Intent intent = new Intent(context, IndicatorFragmentActivity.class);
 				intent.putExtra("distance", bdMapData.getDistance());
 				intent.putExtra("chargeNo", bdMapData.getChargeNo());
+				intent.putExtra("name", bdMapData.getName());
+				intent.putExtra("address", bdMapData.getAddress());
 				intent.putExtra("isFavorited", isFavorited);
 				dismiss();
 				context.startActivity(intent);
@@ -147,14 +146,23 @@ public class SelectPicPopupWindow extends PopupWindow  {
 		ll_pop_dianpin.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(context, IndicatorFragmentActivity.class);
-				intent.putExtra("distance", bdMapData.getDistance());
-				intent.putExtra("chargeNo", bdMapData.getChargeNo());
-				intent.putExtra("name", bdMapData.getName());
-				intent.putExtra("address", bdMapData.getAddress());
-				intent.putExtra("isFavorited", isFavorited);
-				dismiss();
-				context.startActivity(intent);
+				Log.i(TAG, "充电点点评");
+				userInfo = LoginInfoUtils.getLoginInfo(context);
+				if (userInfo == null){
+					//未登录，跳转登录页面
+					context.startActivity(new Intent(context, LoginActivity.class));
+				}else{
+					Intent intent = new Intent(context, IndicatorFragmentActivity.class);
+					intent.putExtra("distance", bdMapData.getDistance());
+					intent.putExtra("chargeNo", bdMapData.getChargeNo());
+					intent.putExtra("name", bdMapData.getName());
+					intent.putExtra("address", bdMapData.getAddress());
+					intent.putExtra("isFavorited", isFavorited);
+					dismiss();
+					context.startActivity(intent);
+				}
+
+
 			}
 		});
 
@@ -191,7 +199,7 @@ public class SelectPicPopupWindow extends PopupWindow  {
 
 
 	/**
-	 * 添加收藏线程
+	 * 取消收藏线程
 	 */
 	Runnable removeFavoriteRun = new Runnable(){
 
@@ -222,7 +230,7 @@ public class SelectPicPopupWindow extends PopupWindow  {
 	};
 
 	/**
-	 * 下载线程
+	 * 添加收藏
 	 */
 	Runnable addFavoriteRun = new Runnable(){
 

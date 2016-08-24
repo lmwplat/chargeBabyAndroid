@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -211,15 +212,36 @@ public class DianpinFragment extends Fragment {
             holder.tvCommentAuthor.setText(item.getAuthor());
             holder.tvCommentInfo.setText(item.getInfo());
             holder.tvCommentCreatedAt.setText(DateUtils.formatDateSimple(item.getCreateTime()));
-
-           /* if (item.getReplyVoList().size() > 0){
+        /*    if (item.getReplyVoList().size() > 0){
                 holder.llReplyLayout.setVisibility(View.VISIBLE);
-                ReplyAdapter adapter = new ReplyAdapter(getActivity());
-                holder.lvCommentReply.setAdapter(adapter);
-                ListViewUtils.setListViewHeightBasedOnChildren(holder.lvCommentReply);
+
+                holder.refreshData(item.getReplyVoList(), position);
 
             }*/
 
+
+        }
+
+        private void setListViewHeightBasedOnChildren(MyListView listView, int count) {
+            // 获取ListView对应的Adapter
+            ListAdapter listAdapter = listView.getAdapter();
+            if (listAdapter == null) {
+                return;
+            }
+
+            int totalHeight = 0;
+            int j = listAdapter.getCount();
+            for (int i = 0; i < count; i++) { // listAdapter.getCount()返回数据项的数目
+                View listItem = listAdapter.getView(i, null, listView);
+//            int desiredWidth= View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+                listItem.measure(0, 0); // 计算子项View 的宽高
+                totalHeight += listItem.getMeasuredHeight(); // 统计所有子项的总高度
+            }
+
+            ViewGroup.LayoutParams params = listView.getLayoutParams();
+            params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+            // params.height最后得到整个ListView完整显示需要的高度
+            listView.setLayoutParams(params);
         }
 
         @Override
@@ -228,6 +250,7 @@ public class DianpinFragment extends Fragment {
         }
 
         class CommentViewHolder extends RecyclerView.ViewHolder {
+
 
             ImageView tvCommentPortrait;
 
@@ -241,6 +264,8 @@ public class DianpinFragment extends Fragment {
 
             MyListView lvCommentReply;
 
+            List<ReplyVo> data;
+
             public CommentViewHolder(View itemView) {
                 super(itemView);
                 tvCommentPortrait = (ImageView) itemView.findViewById(R.id.tv_comment_portrait);
@@ -249,9 +274,29 @@ public class DianpinFragment extends Fragment {
                 tvCommentCreatedAt = (TextView) itemView.findViewById(R.id.tv_comment_created_at);
                 llReplyLayout = (LinearLayout) itemView.findViewById(R.id.ll_reply_layout);
                 lvCommentReply = (MyListView) itemView.findViewById(R.id.lv_comment_reply);
+            }
 
+            public void refreshData(List<ReplyVo> data, int position) {
+                this.data = data;
+               /* ViewGroup.LayoutParams layoutParams = hor_recyclerview.getLayoutParams();
+                //高度等于＝条目的高度＋ 10dp的间距 ＋ 10dp（为了让条目居中）
+                layoutParams.height = screenWidth/3 + dip2px(20);
+                hor_recyclerview.setLayoutParams(layoutParams);
+                hor_recyclerview.setLayoutManager(new LinearLayoutManager(RyRyActivity.this, LinearLayoutManager.HORIZONTAL,false));
+                hor_recyclerview.setBackgroundResource(R.color.colorAccent);
+                hor_recyclerview.setAdapter(new HorizontalAdapter());*/
+
+                ViewGroup.LayoutParams params = lvCommentReply.getLayoutParams();
+                params.height = 1800;
+                // params.height最后得到整个ListView完整显示需要的高度
+                lvCommentReply.setLayoutParams(params);
+                ReplyAdapter adapter = new ReplyAdapter(getActivity());
+                lvCommentReply.setAdapter(adapter);
+
+//                setListViewHeightBasedOnChildren(holder.lvCommentReply, item.getReplyVoList().size());
 
             }
+
         }
 
         public final class ViewHolder{
@@ -262,10 +307,14 @@ public class DianpinFragment extends Fragment {
         public class ReplyAdapter extends BaseAdapter {
 
             private LayoutInflater mInflater;
-
+            public ArrayList<String> arr;
 
             public ReplyAdapter(Context context){
                 this.mInflater = LayoutInflater.from(context);
+                arr = new ArrayList<String>();
+                for(int i=0;i<3;i++){    //listview初始化3个子项
+                    arr.add("");
+                }
             }
             @Override
             public int getCount() {
@@ -302,11 +351,12 @@ public class DianpinFragment extends Fragment {
                 }else {
 
                     holder = (ViewHolder)convertView.getTag();
+                    holder.tvCommentReplyAuthor.setText(replyVoList.get(position).getAuthor());
+                    holder.tvCommentReplyInfo.setText(replyVoList.get(position).getInfo());
                 }
 
 
-                holder.tvCommentReplyAuthor.setText(replyVoList.get(position).getAuthor());
-                holder.tvCommentReplyInfo.setText(replyVoList.get(position).getInfo());
+
 
                 return convertView;
             }

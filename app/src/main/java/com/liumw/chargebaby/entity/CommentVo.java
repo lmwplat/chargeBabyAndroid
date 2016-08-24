@@ -2,6 +2,7 @@ package com.liumw.chargebaby.entity;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class CommentVo implements Serializable {
     private String chargeNo;
 
     /**回复列表*/
-    private List<ReplyVo> replyVoList;
+    private List<ReplyVo> replyVoList = new ArrayList<ReplyVo>();
 
     public CommentVo(){}
     public CommentVo(String author, String info,Date createTime) {

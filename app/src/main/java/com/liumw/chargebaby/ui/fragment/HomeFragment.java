@@ -314,6 +314,7 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         String popFeeStandard = data.getFeeStandard();
         String popAddress = data.getAddress();
         Double popDistance = data.getDistance();
+        String chargeNo = data.getChargeNo();
 
         if (myLatitude == null || myLongitude == null){
             return false;
@@ -328,13 +329,26 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         //显示窗口
         menuWindow.showAtLocation(getActivity().findViewById(R.id.main_content), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
 
+        Charge item = null;
+        try {
+            item = db.selector(Charge.class).where("charge_no","=",chargeNo).findFirst();
+            TextView tv_pop_name = (TextView) menuWindow.getContentView().findViewById(R.id.pop_name);
+            tv_pop_name.setText(item.getName()!= null ? item.getName() : "");
+            TextView tv_price = (TextView) menuWindow.getContentView().findViewById(R.id.pop_price);
+            tv_price.setText(item.getFeeStandard()!= null ? item.getFeeStandard() : "");
+            TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_address);
+            tv_address.setText(item.getAddress()!= null ? item.getAddress() : "");
+            int ac = (item.getAcBuilded()!= null ? item.getAcBuilded() : 0) + (item.getAcBuilding()!= null ? item.getAcBuilding() : 0);
+            TextView tv_pop_main_detail_ac_builded = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_ac_builded);
+            tv_pop_main_detail_ac_builded.setText(ac != 0 ? String.valueOf(ac) : "");
+            int dc = (item.getDcBuilded()!= null ? item.getDcBuilded() : 0) + (item.getDcBuilding()!= null ? item.getDcBuilding() : 0);
+            TextView tv_pop_main_detail_dc_builded = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_dc_builded);
+            tv_pop_main_detail_dc_builded.setText(dc != 0 ? String.valueOf(dc) : "");
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
 
-        TextView tv_pop_name = (TextView) menuWindow.getContentView().findViewById(R.id.pop_name);
-        tv_pop_name.setText(popName);
-        TextView tv_price = (TextView) menuWindow.getContentView().findViewById(R.id.pop_price);
-        tv_price.setText(popFeeStandard);
-        TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_address);
-        tv_address.setText(popAddress);
+
         return true;
     }
 

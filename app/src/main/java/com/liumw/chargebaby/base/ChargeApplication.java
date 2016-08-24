@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.UserInfo;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.xutils.x;
 
@@ -20,6 +21,8 @@ public class ChargeApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
+        //配置bugly
+        CrashReport.initCrashReport(getApplicationContext());
         x.Ext.init(this);
 
         userInfo = LoginInfoUtils.getLoginInfo(getApplicationContext());

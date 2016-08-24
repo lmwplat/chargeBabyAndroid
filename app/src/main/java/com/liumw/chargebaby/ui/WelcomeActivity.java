@@ -14,8 +14,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //配置bugly
-        CrashReport.initCrashReport(getApplicationContext());
+
         setContentView(R.layout.activity_welcome);
         new Handler(new Handler.Callback(){
 

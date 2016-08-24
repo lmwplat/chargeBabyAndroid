@@ -1,9 +1,11 @@
 package com.liumw.chargebaby.ui.detail;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,13 +18,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.liumw.chargebaby.Event.LoginEvent;
 import com.liumw.chargebaby.R;
 import com.liumw.chargebaby.base.AppConstants;
+import com.liumw.chargebaby.base.ChargeApplication;
 import com.liumw.chargebaby.base.ChargeConstants;
+import com.liumw.chargebaby.ui.fragment.MyFragment;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Json;
 import com.liumw.chargebaby.vo.UserInfo;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
 import org.xutils.common.util.LogUtil;
 import org.xutils.common.util.MD5;
@@ -53,9 +62,14 @@ public class LoginActivity extends Activity {
     EditText et_login_password; //密码输入框
 
 
-
-//    User user = null;
+    //    User user = null;
     private Json json;
+    private ChargeApplication app;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,10 +101,13 @@ public class LoginActivity extends Activity {
 
             }
         });
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    @Event(value={R.id.login_back, R.id.login_register, R.id.login_forget_password, R.id.login},type=View.OnClickListener.class)
-    private void onClick(View view){
+    @Event(value = {R.id.login_back, R.id.login_register, R.id.login_forget_password, R.id.login}, type = View.OnClickListener.class)
+    private void onClick(View view) {
 
         //必须为private
         switch (view.getId()) {
@@ -119,6 +136,7 @@ public class LoginActivity extends Activity {
 
     /**
      * 登录
+     *
      * @param username
      * @param password
      */
@@ -134,19 +152,24 @@ public class LoginActivity extends Activity {
             public void onSuccess(String result) {
                 Log.e(username, "onSuccess result<<" + result);
                 json = JSON.parseObject(result, Json.class);
-                if (!json.isSuccess()){
+                if (!json.isSuccess()) {
                     Log.e(TAG, "登录失败" + json.getMsg());
                     Toast.makeText(LoginActivity.this, username + "登录失败", Toast.LENGTH_LONG).show();
-                }else{
+                } else {
                     //将登录信息，存入sharedPreference
-                    LoginInfoUtils.setLoginInfo(LoginActivity.this, JSON.toJSONString(json.getObj()) );
+                    LoginInfoUtils.setLoginInfo(LoginActivity.this, JSON.toJSONString(json.getObj()));
                     UserInfo userInfo = LoginInfoUtils.getLoginInfo(LoginActivity.this);
+                    app = (ChargeApplication) getApplication();
+                    app.setLoginName(username);
+                    app.setUserInfo(userInfo);
+                    EventBus.getDefault().post(
+                            new LoginEvent(userInfo));
 
                     Log.i(TAG, "登录时测试从sp中获取" + userInfo.toString());
                     Toast.makeText(LoginActivity.this, username + "登录成功", Toast.LENGTH_LONG).show();
                     progressDialog.cancel();
                     // 跳转到登录页面
-                    Intent intent=new Intent();
+                    Intent intent = new Intent();
                     intent.putExtra("userInfo", userInfo);
                     setResult(ChargeConstants.REGISTER_SUCCESS_RESULT_CODE, intent);
                     finish();
@@ -156,18 +179,18 @@ public class LoginActivity extends Activity {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(LoginActivity.this, username + "登录失败", Toast.LENGTH_LONG).show();
-                Log.e(TAG, "onError" );
+                Log.e(TAG, "onError");
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
 
-                Log.e(TAG, "onCancelled" );
+                Log.e(TAG, "onCancelled");
             }
 
             @Override
             public void onFinished() {
-                Log.e(TAG, "onFinished" );
+                Log.e(TAG, "onFinished");
                 progressDialog.cancel();
             }
         });
@@ -180,6 +203,46 @@ public class LoginActivity extends Activity {
             setResult(ChargeConstants.REGISTER_SUCCESS_RESULT_CODE, data);
             finish();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+      /*  client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Login Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.liumw.chargebaby.ui.detail/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);*/
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+       /* Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Login Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.liumw.chargebaby.ui.detail/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();*/
     }
 }
 

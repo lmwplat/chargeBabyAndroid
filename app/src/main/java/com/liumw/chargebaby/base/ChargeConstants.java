@@ -35,6 +35,8 @@ public class ChargeConstants {
     /**分享url*/
     public static String SHARE_URL = "http://120.76.194.88:8070/download/download.html";
     public static String SHARE_TEXT = "桩宝宝下载页面";
+    public static String SHARE_TITLE = "分享桩宝宝";
+    public static String SHARE_IMAGE_URL = "http://120.76.194.88:8070/pic/chargebaby.png";
     /***********/
 }
 

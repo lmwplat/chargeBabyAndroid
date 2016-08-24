@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/normal_space" >
 
-        <LinearLayout
+        <!--<LinearLayout
             android:id="@+id/ll_my_dianping"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
                 android:layout_marginTop="3dp"
                 android:text="我的点评"
                 android:textColor="#000" />
-        </LinearLayout>
+        </LinearLayout>-->
 
         <View
             android:layout_width="1dp"

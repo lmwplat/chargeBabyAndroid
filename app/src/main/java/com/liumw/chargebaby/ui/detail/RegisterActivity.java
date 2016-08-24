@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.liumw.chargebaby.R;
 import com.liumw.chargebaby.base.AppConstants;
+import com.liumw.chargebaby.base.ChargeApplication;
 import com.liumw.chargebaby.base.ChargeConstants;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Json;
@@ -53,6 +54,7 @@ public class RegisterActivity extends Activity {
     private String password2;
 //    private User user;
     private Json json;
+    private ChargeApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +138,9 @@ public class RegisterActivity extends Activity {
                     LoginInfoUtils.setLoginInfo(RegisterActivity.this, JSON.toJSONString(json.getObj()));
                     UserInfo userInfo = LoginInfoUtils.getLoginInfo(RegisterActivity.this);
 
+                    app = (ChargeApplication) getApplication();
+                    app.setUserInfo(userInfo);
+                    app.setLoginName(username);
                     Toast.makeText(RegisterActivity.this, username + "注册成功", Toast.LENGTH_LONG).show();
                     progressDialog.cancel();
                     // 跳转到登录页面
