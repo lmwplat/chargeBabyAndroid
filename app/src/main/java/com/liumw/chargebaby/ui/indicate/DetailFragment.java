@@ -104,7 +104,7 @@ public class DetailFragment extends Fragment implements AMapLocationListener {
                 tv_charge_detail_ac_building.setText(charge.getAcBuilding() != null ? String.valueOf(charge.getAcBuilding()) : "");
                 tv_charge_detail_dc_builded.setText(charge.getDcBuilded() != null ? String.valueOf(charge.getDcBuilded()) : "");
                 tv_charge_detail_dc_building.setText(charge.getDcBuilding() != null ? String.valueOf(charge.getDcBuilding()) : "");
-                tv_charge_detail_begin_time.setText(charge.getBeginTime()!= null ? charge.getAddress() : "");
+                tv_charge_detail_begin_time.setText(charge.getBeginTime()!= null ? charge.getBeginTime() : "");
                 tv_charge_detail_tel.setText(charge.getTel()!= null ? charge.getTel() : "");
                 tv_charge_detail_standard_name.setText(charge.getStandardName()!= null ? charge.getStandardName() : "");
                 tv_charge_detail_fee_standard.setText(charge.getFeeStandard()!= null ? charge.getFeeStandard() : "");

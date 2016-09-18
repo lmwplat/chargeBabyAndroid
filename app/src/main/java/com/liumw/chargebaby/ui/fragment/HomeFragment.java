@@ -414,10 +414,11 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
                 LatLng desLatLng = new LatLng(item.getLatitude(), item.getLongitude());
                 CameraUpdate update =CameraUpdateFactory.newLatLngZoom(desLatLng, 18);
                 aMap.moveCamera(update);
-                LatLng myLatLng = new LatLng(myLatitude, myLongitude);
                 if(myLatitude == null || myLongitude == null){
                     return;
                 }
+                LatLng myLatLng = new LatLng(myLatitude, myLongitude);
+
                 Float distance = AMapUtils.calculateLineDistance(myLatLng, desLatLng);
                 //弹出pop
                 BDMapData bdMapData = new BDMapData();
