@@ -1,5 +1,6 @@
 package com.liumw.chargebaby.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
-
+    private static final String TAG = "SearchActivity";
     @ViewInject(R.id.iv_back)
     private ImageView ivBack;
     @ViewInject(R.id.et_search)
@@ -77,8 +79,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     return;
                 }
                 try {
-                    mList = mDb.selector(Charge.class).where("area","like","%天%").or("name","like","%酒店%").findAll();
+                    //String tmp =
+                    mList = mDb.selector(Charge.class).where("area","like","%" + info + "%").or("name","like", "%" + info + "%").findAll();
                     mAdapter.notifyDataSetChanged();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(view,InputMethodManager.SHOW_FORCED);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
                 } catch (DbException e) {
                     e.printStackTrace();
                 }

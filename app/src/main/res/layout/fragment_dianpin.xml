@@ -1,0 +1,51 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:id="@+id/fg_dingping"
+    tools:context="com.liumw.chargebaby.ui.indicate.DianpinFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_dianping_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_comment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp">
+
+        <EditText
+            android:id="@+id/review_comment_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:maxLength="2000"
+            android:paddingLeft="3dp"
+            android:textSize="12sp"
+            android:hint="该充电服务如何？说两句吧"/>
+
+        <Button
+            android:id="@+id/bt_comment_submit"
+            android:layout_width="59dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="3dp"
+            android:background="@color/common_blue"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="提交" />
+
+    </LinearLayout>
+
+</FrameLayout>

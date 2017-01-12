@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/normal_space" >
+
+        <TextView
+            android:id="@+id/tv_charge_detail_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="广州电动汽车体验中心充电站"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:textSize="@dimen/text_size_detail_name"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/normal_space" >
+
+
+
+            <TextView
+                android:id="@+id/tv_charge_detail_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text=" 广州市天河区花城大道东"
+                android:textColor="@color/abc_secondary_text_material_light"
+                android:textSize="@dimen/text_size_detail_address" />
+
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>

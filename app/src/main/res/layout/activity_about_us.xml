@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:padding="@dimen/normal_space"
-            android:text="关于我们"
+            android:text="@string/about_us"
             android:textColor="#000"
             android:textSize="@dimen/title_text_size" />
 
@@ -33,6 +33,64 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
+
+        <com.liumw.chargebaby.myviews.VerticalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <include layout="@layout/activity_about_us_logo" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="left"
+                    android:padding="@dimen/normal_space"
+                    android:textColor="@color/black"
+                    android:text="“桩宝宝”是由广州市节能协会为广大电动汽车用户量身定制免费的充电桩信息平台，提供最佳的充电和用车服务体验。欢迎广大用户分享个人充电点和采集已有公共充电点信息，携手打造更完善的充电网络。"
+                    android:textSize="@dimen/text_size_big" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="left"
+                    android:padding="@dimen/normal_space"
+                    android:textColor="@color/black"
+                    android:text="联系电话：020-83344043"
+                    android:textSize="@dimen/text_size_big" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="left"
+                    android:padding="@dimen/normal_space"
+                    android:textColor="@color/black"
+                    android:text="邮箱：gzeca40143@163.com"
+                    android:textSize="@dimen/text_size_big" />
+
+            </LinearLayout>
+        </com.liumw.chargebaby.myviews.VerticalScrollView>
+
+            <!-- title shadow -->
+            <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@mipmap/title_shadow" />
+
 
 
     </FrameLayout>

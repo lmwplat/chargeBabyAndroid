@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white" >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/normal_space"
+                android:text="@string/charge_detail"
+                android:textColor="#000"
+                android:textSize="@dimen/title_text_size" />
+
+            <ImageView
+                android:id="@+id/charge_detail_dianping_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:src="@mipmap/ic_back_u" />
+            <ImageView
+                android:id="@+id/iv_detail_dianping_my_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:paddingRight="10dp"
+                android:gravity="center"
+                android:src="@mipmap/my_favorite_write" />
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white" >
+
+
+            <include layout="@layout/activity_charge_detail_simple" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+    </FrameLayout>
+
+
+
+
+        <com.liumw.chargebaby.ui.indicate.TitleIndicator
+            android:id="@+id/pagerindicator"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:background="@color/white"
+            app:footerColor="@color/tab_indicator_text_selected"
+            app:footerLineHeight="2dp"
+            app:footerTriangleHeight="3.0dp"
+            app:textSizeNormal="@dimen/common_text_size_middle_2"
+            app:textSizeSelected="@dimen/common_text_size_middle_2" />
+
+        <!-- Don't set background for ViewPager. It doesn't work because of page margin -->
+
+        <com.liumw.chargebaby.ui.indicate.ViewPagerCompat
+            android:id="@+id/pager"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:duplicateParentState="true" />
+
+
+
+
+</LinearLayout>

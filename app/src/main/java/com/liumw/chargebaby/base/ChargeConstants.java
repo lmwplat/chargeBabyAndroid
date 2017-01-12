@@ -21,12 +21,22 @@ public class ChargeConstants {
     /**公用变量*/
     /**登录信息为null*/
     public static String LOGIN_NULL = "null";
+    public static String PACKAGE_NAME = "com.liumw.chargebaby";
     /***********/
 
 
     /**地图变量*/
     /**范围*/
     public static Double DISTANCE = 10000.0;
+    /***********/
+
+
+    /**分享变量*/
+    /**分享url*/
+    public static String SHARE_URL = "http://120.76.194.88:8070/download/download.html";
+    public static String SHARE_TEXT = "桩宝宝下载页面";
+    public static String SHARE_TITLE = "分享桩宝宝";
+    public static String SHARE_IMAGE_URL = "http://120.76.194.88:8070/pic/chargebaby.png";
     /***********/
 }
 

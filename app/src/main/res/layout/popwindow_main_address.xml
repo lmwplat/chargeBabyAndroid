@@ -2,37 +2,58 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/white" >
+    android:background="@color/white"
+    android:orientation="horizontal">
 
     <LinearLayout
+        android:id="@+id/ll_pop_navi"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:padding="@dimen/normal_space" >
+        android:padding="@dimen/normal_space"
+        android:layout_weight="1">
 
         <ImageView
-            android:id="@+id/index_my_list1_touxiang"
-            android:scaleType="centerInside"
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/nav_car" />
 
-        <LinearLayout
+
+        <TextView
+            android:layout_marginLeft="3dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingLeft="3dp" >
+            android:text="导航"
+            android:textColor="#000"
+            android:textSize="@dimen/title_text_size" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="导航"
-                android:textColor="#000"
-                android:textSize="@dimen/title_text_size" />
-        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_pop_dianpin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:padding="@dimen/normal_space"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/my_dianping" />
+
+
+        <TextView
+            android:layout_marginLeft="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点评"
+            android:textColor="#000"
+            android:textSize="@dimen/title_text_size" />
 
     </LinearLayout>
 

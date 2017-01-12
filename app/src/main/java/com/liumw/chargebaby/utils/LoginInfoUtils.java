@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.alibaba.fastjson.JSON;
-import com.liumw.chargebaby.base.Application;
+import com.liumw.chargebaby.base.AppConstants;
 import com.liumw.chargebaby.base.ChargeConstants;
-import com.liumw.chargebaby.entity.User;
+import com.liumw.chargebaby.vo.UserInfo;
 
 /**
  * Created by Administrator on 2016/7/30 0030.
@@ -20,14 +20,14 @@ public class LoginInfoUtils {
      * @param context
      * @return
      */
-    public static User getLoginInfo(Context context){
-        SharedPreferences sp = context.getSharedPreferences(Application.SP_FILE_NAME, Context.MODE_PRIVATE);
-        String str = sp.getString(Application.LONIN_INFO, null);
+    public static UserInfo getLoginInfo(Context context){
+        SharedPreferences sp = context.getSharedPreferences(AppConstants.SP_FILE_NAME, Context.MODE_PRIVATE);
+        String str = sp.getString(AppConstants.LONIN_INFO, null);
         if (str == null || str.equals("null")){
             return null;
         }else {
-            User user = JSON.parseObject(str, User.class);
-            return user;
+            UserInfo userInfo = JSON.parseObject(str, UserInfo.class);
+            return userInfo;
         }
     }
 
@@ -37,9 +37,9 @@ public class LoginInfoUtils {
      * @return
      */
     public static Boolean removeLoginInfo(Context  context){
-        SharedPreferences sp = context.getSharedPreferences(Application.SP_FILE_NAME, Context.MODE_PRIVATE);
-        sp.edit().putString(Application.LONIN_INFO, ChargeConstants.LOGIN_NULL).commit();
-        String str = sp.getString(Application.LONIN_INFO, null);
+        SharedPreferences sp = context.getSharedPreferences(AppConstants.SP_FILE_NAME, Context.MODE_PRIVATE);
+        sp.edit().putString(AppConstants.LONIN_INFO, ChargeConstants.LOGIN_NULL).commit();
+        String str = sp.getString(AppConstants.LONIN_INFO, null);
         if (str == null || str.equals("null")){
             return true;
         }else {
@@ -54,9 +54,9 @@ public class LoginInfoUtils {
      * @return
      */
     public static void setLoginInfo(Context context, String value){
-        SharedPreferences sp = context.getSharedPreferences(Application.SP_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(AppConstants.SP_FILE_NAME, Context.MODE_PRIVATE);
         //将登录信息，存入sharedPreference
-        sp.edit().putString(Application.LONIN_INFO, value).commit();
+        sp.edit().putString(AppConstants.LONIN_INFO, value).commit();
     }
 
 

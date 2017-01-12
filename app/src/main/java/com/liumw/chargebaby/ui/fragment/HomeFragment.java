@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -22,12 +23,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
@@ -46,6 +49,7 @@ import com.liumw.chargebaby.ui.MainActivity;
 import com.liumw.chargebaby.ui.SearchActivity;
 import com.liumw.chargebaby.ui.popwindow.SelectPicPopupWindow;
 import com.liumw.chargebaby.utils.ToastUtils;
+import com.liumw.chargebaby.vo.Data;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
@@ -96,7 +100,7 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         mapView = (MapView) view.findViewById(R.id.mapView);
-        tvSearch = (TextView) view.findViewById(R.id.tv_search);
+        tvSearch = (TextView) view.findViewById(R.id.tv_home_search);
         mapView.onCreate(savedInstanceState);
         return view;
     }
@@ -112,7 +116,7 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SearchActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,101);
             }
         });
     }
@@ -144,7 +148,10 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         mListener = null;
         int i = 0;
     }
-
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
     @Override
     public void onPause() {
         super.onPause();
@@ -302,32 +309,46 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
-        Bundle bundle = (Bundle) marker.getObject();
-        String popName = bundle.getString("name");
-        String popFeeStandard = bundle.getString("feeStandard");
-        String popAddress = bundle.getString("address");
-        Double popDistance = bundle.getDouble("distance");
+        BDMapData data = (BDMapData) marker.getObject();
+        String popName = data.getName();
+        String popFeeStandard = data.getFeeStandard();
+        String popAddress = data.getAddress();
+        Double popDistance = data.getDistance();
+        String chargeNo = data.getChargeNo();
 
+        if (myLatitude == null || myLongitude == null){
+            return false;
+        }
+
+        data.setMyLatitude(myLatitude);
+        data.setMyLongitude(myLongitude);
 
         Log.e(TAG, "点击了覆盖物");
         //实例化SelectPicPopupWindow
-        menuWindow = new SelectPicPopupWindow(getActivity(), null);
+        menuWindow = new SelectPicPopupWindow(getActivity(), data);
         //显示窗口
         menuWindow.showAtLocation(getActivity().findViewById(R.id.main_content), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
 
+        Charge item = null;
+        try {
+            item = db.selector(Charge.class).where("charge_no","=",chargeNo).findFirst();
+            TextView tv_pop_name = (TextView) menuWindow.getContentView().findViewById(R.id.pop_name);
+            tv_pop_name.setText(item.getName()!= null ? item.getName() : "");
+            TextView tv_price = (TextView) menuWindow.getContentView().findViewById(R.id.pop_price);
+            tv_price.setText(item.getFeeStandard()!= null ? item.getFeeStandard() : "");
+            TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_address);
+            tv_address.setText(item.getAddress()!= null ? item.getAddress() : "");
+            int ac = (item.getAcBuilded()!= null ? item.getAcBuilded() : 0) + (item.getAcBuilding()!= null ? item.getAcBuilding() : 0);
+            TextView tv_pop_main_detail_ac_builded = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_ac_builded);
+            tv_pop_main_detail_ac_builded.setText(ac != 0 ? String.valueOf(ac) : "");
+            int dc = (item.getDcBuilded()!= null ? item.getDcBuilded() : 0) + (item.getDcBuilding()!= null ? item.getDcBuilding() : 0);
+            TextView tv_pop_main_detail_dc_builded = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_dc_builded);
+            tv_pop_main_detail_dc_builded.setText(dc != 0 ? String.valueOf(dc) : "");
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
 
-        TextView tv_pop_name = (TextView) menuWindow.getContentView().findViewById(R.id.pop_name);
-        tv_pop_name.setText(popName);
-        TextView tv_price = (TextView) menuWindow.getContentView().findViewById(R.id.pop_price);
-        tv_price.setText(popFeeStandard);
-        TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.pop_address);
-        tv_address.setText(popAddress);
-        //得到点击的覆盖物的经纬度
-//        LatLng ll = marker.getPosition();
 
-        //让地图以备点击的覆盖物为中心
-        /*MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(ll);
-        mBaiduMap.setMapStatus(status);*/
         return true;
     }
 
@@ -335,13 +356,17 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
      * 获取附近的所有充电桩
      */
     private void getAllCharge() throws DbException {
+        Float distance = null;
         LatLng myLatLng = new LatLng(myLatitude, myLongitude);
         List<Charge> all = db.findAll(Charge.class);
         for(Charge charge : all){
             if (charge.getLatitude() != null && charge.getLongitude() != null){
                 LatLng  chargeLat = new LatLng(charge.getLatitude(), charge.getLongitude());
-                Float distance = AMapUtils.calculateLineDistance(myLatLng, chargeLat);
+                if (myLatitude != null && myLongitude != null){
+                    distance = AMapUtils.calculateLineDistance(myLatLng, chargeLat);
+                }
                 BDMapData bDMapData = new BDMapData();
+                bDMapData.setChargeNo(charge.getChargeNo());
                 bDMapData.setName(charge.getName());
                 bDMapData.setAddress(charge.getAddress());
                 bDMapData.setDistance(distance);
@@ -360,7 +385,7 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
         Marker marker = null;
         LatLng point = null;
         MarkerOptions option = null;
-        BitmapDescriptor bitmap =BitmapDescriptorFactory.fromResource(R.mipmap.icon_marka);
+        BitmapDescriptor bitmap =BitmapDescriptorFactory.fromResource(R.mipmap.icon_mark_charge);
         //Marker marker = aMap.addMarker(createMarkOptions(39.936713, 116.386475, "测试1", "测试1内容", R.mipmap.ic_launcher));
         //获取附近的所有充电桩
         getAllCharge();
@@ -369,17 +394,8 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
             point = new LatLng(data.getLatitude(), data.getLongitude());
             option = new MarkerOptions().position(point).icon(bitmap);
             marker = aMap.addMarker(option);
-            //Bundle用于通信
-            Bundle bundle = new Bundle();
-            bundle.putString("name", data.getName());
-            bundle.putString("feeStandard", data.getFeeStandard());
-            bundle.putString("address", data.getAddress());
-            bundle.putDouble("distance", data.getDistance());
-            marker.setObject(bundle);//将bundle值传入marker中，给baiduMap设置监听时可以得到它
+            marker.setObject(data);//将bundle值传入marker中，给baiduMap设置监听时可以得到它
         }
-        //将地图移动到最后一个标志点
-        /*MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(point);
-        mBaiduMap.setMapStatus(status);*/
 
     }
 
@@ -392,10 +408,48 @@ public class HomeFragment extends Fragment implements LocationSource, AMapLocati
                 if(item == null) {
                     return;
                 }
-                /*MarkerOptions options = createAndMoveMarkOptions(item.getLatitude(), item.getLongitude(), item.getName(), item.getAddress(), -1);
-                aMap.addMarker(options);*/
-                //此处添加标记物或者其他操作
 
+                //此处添加标记物或者其他操作
+                //刷新位置
+                LatLng desLatLng = new LatLng(item.getLatitude(), item.getLongitude());
+                CameraUpdate update =CameraUpdateFactory.newLatLngZoom(desLatLng, 18);
+                aMap.moveCamera(update);
+                if(myLatitude == null || myLongitude == null){
+                    return;
+                }
+                LatLng myLatLng = new LatLng(myLatitude, myLongitude);
+
+                Float distance = AMapUtils.calculateLineDistance(myLatLng, desLatLng);
+                //弹出pop
+                BDMapData bdMapData = new BDMapData();
+                bdMapData.setChargeNo(item.getChargeNo());
+                bdMapData.setLongitude(item.getLongitude());
+                bdMapData.setLatitude(item.getLatitude());
+                bdMapData.setFeeStandard(item.getFeeStandard());
+                bdMapData.setAddress(item.getAddress());
+                bdMapData.setName(item.getName());
+                bdMapData.setMyLatitude(myLatitude);
+                bdMapData.setMyLongitude(myLongitude);
+                bdMapData.setDistance(distance);
+
+                //实例化SelectPicPopupWindow
+                menuWindow = new SelectPicPopupWindow(getActivity(), bdMapData);
+                //显示窗口
+                menuWindow.showAtLocation(getActivity().findViewById(R.id.main_content), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+
+
+                TextView tv_pop_name = (TextView) menuWindow.getContentView().findViewById(R.id.pop_name);
+                tv_pop_name.setText(item.getName()!= null ? item.getName() : "");
+                TextView tv_price = (TextView) menuWindow.getContentView().findViewById(R.id.pop_price);
+                tv_price.setText(item.getFeeStandard()!= null ? item.getFeeStandard() : "");
+                TextView tv_address = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_address);
+                tv_address.setText(item.getAddress()!= null ? item.getAddress() : "");
+                int ac = (item.getAcBuilded()!= null ? item.getAcBuilded() : 0) + (item.getAcBuilding()!= null ? item.getAcBuilding() : 0);
+                TextView tv_pop_main_detail_ac_builded = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_ac_builded);
+                tv_pop_main_detail_ac_builded.setText(ac != 0 ? String.valueOf(ac) : "");
+                int dc = (item.getDcBuilded()!= null ? item.getDcBuilded() : 0) + (item.getDcBuilding()!= null ? item.getDcBuilding() : 0);
+                TextView tv_pop_main_detail_dc_builded = (TextView) menuWindow.getContentView().findViewById(R.id.tv_pop_main_detail_dc_builded);
+                tv_pop_main_detail_dc_builded.setText(dc != 0 ? String.valueOf(dc) : "");
                 break;
         }
     }

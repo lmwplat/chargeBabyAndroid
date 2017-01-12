@@ -2,9 +2,7 @@ package com.liumw.chargebaby.ui.detail;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -17,13 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.google.gson.Gson;
 import com.liumw.chargebaby.R;
-import com.liumw.chargebaby.base.Application;
+import com.liumw.chargebaby.base.AppConstants;
+import com.liumw.chargebaby.base.ChargeApplication;
 import com.liumw.chargebaby.base.ChargeConstants;
-import com.liumw.chargebaby.entity.User;
 import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Json;
+import com.liumw.chargebaby.vo.UserInfo;
 
 import org.xutils.common.Callback;
 import org.xutils.common.util.MD5;
@@ -54,8 +52,9 @@ public class RegisterActivity extends Activity {
     private String username;
     private String password;
     private String password2;
-    private User user;
+//    private User user;
     private Json json;
+    private ChargeApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +66,7 @@ public class RegisterActivity extends Activity {
 
             @Override
             public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-                if (et_pw2.getText().toString().length() >= 6) {
+                if (et_pw2.getText().toString().length() >= 6 && et_pw2.getText().toString().length() <=20) {
                     bt_register.setEnabled(true);
                     Log.e(TAG, "register-set-true");
                 } else {
@@ -119,7 +118,7 @@ public class RegisterActivity extends Activity {
     }
 
     private void register(final String username, String password) {
-        String requestUrl = Application.SERVER + Application.ACTION_REGIST;
+        String requestUrl = AppConstants.SERVER + AppConstants.ACTION_REGIST;
         final ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
         progressDialog.setMessage("请稍候...");
         RequestParams params = new RequestParams(requestUrl);
@@ -128,7 +127,7 @@ public class RegisterActivity extends Activity {
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.e(username, "onSuccess result<<" + result);
+                Log.i(username, "onSuccess result<<" + result);
                 json = JSON.parseObject(result, Json.class);//result为请求后返回的JSON数据,可以直接使用XUtils获得,NewsData.class为一个bean.如以下数据：
                 if (!json.isSuccess()){
 
@@ -137,12 +136,16 @@ public class RegisterActivity extends Activity {
                 }else{
                     //将登录信息，存入sharedPreference
                     LoginInfoUtils.setLoginInfo(RegisterActivity.this, JSON.toJSONString(json.getObj()));
+                    UserInfo userInfo = LoginInfoUtils.getLoginInfo(RegisterActivity.this);
 
+                    app = (ChargeApplication) getApplication();
+                    app.setUserInfo(userInfo);
+                    app.setLoginName(username);
                     Toast.makeText(RegisterActivity.this, username + "注册成功", Toast.LENGTH_LONG).show();
                     progressDialog.cancel();
                     // 跳转到登录页面
                     Intent intent=new Intent();
-                    intent.putExtra("username", username);
+                    intent.putExtra("userInfo", userInfo);
                     setResult(ChargeConstants.REGISTER_SUCCESS_RESULT_CODE, intent);
 
                     finish();
@@ -189,7 +192,6 @@ public class RegisterActivity extends Activity {
             Toast.makeText(this, "密码长度不足6位", Toast.LENGTH_SHORT).show();
             return false;
         }
-
         return true;
     }
 

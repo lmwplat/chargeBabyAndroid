@@ -30,7 +30,7 @@
             android:textSize="@dimen/title_text_size" />
 
         <TextView
-            android:id="@+id/tv_search"
+            android:id="@+id/tv_home_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -41,7 +41,7 @@
             android:paddingLeft="22dp"
             android:paddingRight="14dp"
             android:paddingTop="7dp"
-            android:text="输入区域、充点电        "
+            android:text="输入区域、充电点        "
             android:textColor="@color/white" />
 
     </LinearLayout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">chargeBaby</string>
+    <string name="app_name">桩宝宝</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -21,8 +21,8 @@
     <!--Strings for register -->
     <string name="title_activity_register">注册</string>
     <string name="register_tip_user">请输入您的用户名</string>
-    <string name="register_tip_pwd1">请设置您密码</string>
-    <string name="register_tip_pwd2">请重复上面密码</string>
+    <string name="register_tip_pwd1">请设置您密码(长度6-20)</string>
+    <string name="register_tip_pwd2">请重复上面密码(长度6-20)</string>
     <string name="register_btn_text">注册</string>
     <string name="confirm_btn_text">确认</string>
 
@@ -38,4 +38,38 @@
     <string name="feedback_content">请输入您的宝贵意见</string>
     <string name="search">搜索</string>
     <string name="search_keyword">搜索关键字</string>
+
+    <!--String for about us-->
+    <string name="about_us">关于我们</string>
+
+    <!--String for charge detail-->
+    <string name="check_detail">详细情况</string>
+    <string name="charge_detail">充电点详情</string>
+
+    <!--String for favorite-->
+    <string name="title_activity_my_favorite">我的收藏</string>
+
+    <!--String for collect-->
+    <string name="title_activity_my_collect">桩点采集</string>
+    <string name="my_collect_confirm">提交</string>
+    <string name="my_collect_content">请输入桩点信息</string>
+
+    <!--语音-->
+    <string name="app_id">输入您讯飞的appid</string>
+    <string name="preference_default_tts_role">xiaoyan</string>
+    <string name="preference_key_tts_speed">tts_speed</string>
+    <string name="preference_title_tts_speed">语速</string>
+    <string name="preference_default_tts_speed">50</string>
+    <string name="preference_dialog_title_tts_speed">选择语速</string>
+    <string name="preference_key_tts_volume">tts_volume</string>
+    <string name="preference_title_tts_volume">音量</string>
+    <string name="preference_default_tts_volume">50</string>
+    <string name="preference_dialog_title_tts_volume">选择音量</string>
+    <string name="preference_key_tts_pitch">tts_pitch</string>
+    <string name="preference_title_tts_pitch">语调</string>
+    <string name="preference_default_tts_pitch">50</string>
+    <string name="intell_bd_title">智能播报</string>
+
+    <string name="fragment_one">详情</string>
+    <string name="fragment_two">点评</string>
 </resources>
