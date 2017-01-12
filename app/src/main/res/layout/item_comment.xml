@@ -58,7 +58,7 @@
                 android:layout_marginRight="1dp"
                 android:visibility="gone">
 
-                <com.liumw.chargebaby.myviews.MyListView
+                <com.liumw.chargebaby.myviews.MylistView
                     android:id="@+id/lv_comment_reply"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

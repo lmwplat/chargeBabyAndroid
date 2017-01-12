@@ -11,7 +11,7 @@ import org.xutils.x;
 public class AppConstants {
 
     /**服务器*/
-//    public static final String SERVER = "http://192.168.0.101:8080/chargebabyforplat/";
+//    public static final String SERVER = "http://192.168.0.102:8080/chargebabyforplat/";
     public static final String SERVER = "http://120.76.194.88:8080/chargebabyforplat/";
     /**远程登录方法接口*/
     public static final String ACTION_LOGIN = "userController/login";

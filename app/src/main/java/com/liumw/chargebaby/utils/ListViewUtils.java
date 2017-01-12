@@ -3,16 +3,15 @@ package com.liumw.chargebaby.utils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 
-import com.liumw.chargebaby.myviews.MyListView;
+import com.liumw.chargebaby.myviews.MylistView;
 
 /**
  * Created by liumw on 2016/8/19 0019.
  */
 public class ListViewUtils {
 
-    public static void setListViewHeightBasedOnChildren(MyListView listView) {
+    public static void setListViewHeightBasedOnChildren(MylistView listView) {
         // 获取ListView对应的Adapter
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {

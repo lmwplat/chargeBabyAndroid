@@ -17,22 +17,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.liumw.chargebaby.R;
 import com.liumw.chargebaby.base.AppConstants;
 import com.liumw.chargebaby.base.ChargeApplication;
-import com.liumw.chargebaby.base.ChargeConstants;
 import com.liumw.chargebaby.entity.Charge;
 import com.liumw.chargebaby.entity.CommentVo;
 import com.liumw.chargebaby.entity.ReplyVo;
-import com.liumw.chargebaby.myviews.MyListView;
+import com.liumw.chargebaby.myviews.MylistView;
 import com.liumw.chargebaby.ui.detail.LoginActivity;
-import com.liumw.chargebaby.ui.detail.MyFavoriteActivity;
 import com.liumw.chargebaby.utils.DateUtils;
-import com.liumw.chargebaby.utils.ListViewUtils;
+import com.liumw.chargebaby.utils.LoginInfoUtils;
 import com.liumw.chargebaby.vo.Json;
 import com.liumw.chargebaby.vo.UserInfo;
 
@@ -84,7 +81,7 @@ public class DianpinFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         chargeNo = ((IndicatorFragmentActivity)getActivity()).getChargeNo();
 
-
+        context = getActivity();
         my_dianping_recycler_view.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new CommentAdapter();
         my_dianping_recycler_view.setAdapter(mAdapter);
@@ -96,7 +93,20 @@ public class DianpinFragment extends Fragment {
     @Event(type = View.OnClickListener.class,value = R.id.bt_comment_submit)
     private void comentSubmitOnClick(View view){
         String str = review_comment_edit.getText().toString();
-        addCommet(str);
+
+        //判断用户是否登录
+        //从共享参数获取数据
+        userInfo = LoginInfoUtils.getLoginInfo(this.context);
+        if (userInfo == null){
+            //提示先登录//未登录，跳转登录页面
+            startActivity(new Intent(context, LoginActivity.class));
+
+        }else{
+
+            addCommet(str);
+        }
+
+
 
 
     }
@@ -222,7 +232,7 @@ public class DianpinFragment extends Fragment {
 
         }
 
-        private void setListViewHeightBasedOnChildren(MyListView listView, int count) {
+        private void setListViewHeightBasedOnChildren(MylistView listView, int count) {
             // 获取ListView对应的Adapter
             ListAdapter listAdapter = listView.getAdapter();
             if (listAdapter == null) {
@@ -262,7 +272,7 @@ public class DianpinFragment extends Fragment {
 
             LinearLayout llReplyLayout;
 
-            MyListView lvCommentReply;
+            MylistView lvCommentReply;
 
             List<ReplyVo> data;
 
@@ -273,7 +283,7 @@ public class DianpinFragment extends Fragment {
                 tvCommentInfo = (TextView) itemView.findViewById(R.id.tv_comment_info);
                 tvCommentCreatedAt = (TextView) itemView.findViewById(R.id.tv_comment_created_at);
                 llReplyLayout = (LinearLayout) itemView.findViewById(R.id.ll_reply_layout);
-                lvCommentReply = (MyListView) itemView.findViewById(R.id.lv_comment_reply);
+                lvCommentReply = (MylistView) itemView.findViewById(R.id.lv_comment_reply);
             }
 
             public void refreshData(List<ReplyVo> data, int position) {
